@@ -3,13 +3,13 @@ import javax.swing.ImageIcon;
 public class Knight extends Piece {
 	
 	private ImageIcon knight;
-	private int row;
-	private int column;
+	
+	public Knight() {
+		super();
+	}
 	
 	public Knight(String color, String name, int row, int column) {
-		super(color, name);
-		this.row = row;
-		this.column = column;
+		super(color, name, row, column);
 		if (color == "white") {
 			knight = new ImageIcon("white_knight.png");
 		}
@@ -25,26 +25,10 @@ public class Knight extends Piece {
 	public void setIcon(ImageIcon knight) {
 		this.knight = knight;
 	}
-
-	public int getRow() {
-		return row;
-	}
-
-	public void setRow(int row) {
-		this.row = row;
-	}
-
-	public int getColumn() {
-		return column;
-	}
-
-	public void setColumn(int column) {
-		this.column = column;
-	}
 	
 	public boolean isValidMove(int x, int y) {
-		int row_diff = Math.abs(x - this.row);
-		int column_diff = Math.abs(y - this.column);
+		int row_diff = Math.abs(x - this.getRow());
+		int column_diff = Math.abs(y - this.getColumn());
 		
 		if ( (row_diff == 1) && (column_diff == 2)) {
 			return true;
