@@ -4,7 +4,7 @@ public class Driver {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-        SplashMenu game = new Menu();
+        Menu game = new Menu();
 		//board chess_gui = new board();
 		//chess_gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
