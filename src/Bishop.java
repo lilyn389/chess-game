@@ -24,8 +24,6 @@ public class Bishop extends Piece {
 	
 	public boolean isValidMove(int x, int y) {
 	
-		return true;
+		return diagonalMove(x, y);
 	}
-	
-	
 }

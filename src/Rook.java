@@ -25,8 +25,14 @@ public class Rook extends Piece {
 	
 	public boolean isValidMove(int x, int y) {
 	
-		return true;
+		//Check for path obstruction
+	
+	
+		return validRookMove(x, y);
 	}
 	
-	
+	private boolean validRookMove(int x, int y) {
+		
+		return orthagonalMove(x, y);
+	}
 }

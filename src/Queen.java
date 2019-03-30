@@ -24,8 +24,14 @@ public class Queen extends Piece {
 	
 	public boolean isValidMove(int x, int y) {
 	
-		return true;
+		//Check for path obstructions
+		
+		return validQueenMove(x, y);
 	}
 	
+	private boolean validQueenMove(int x, int y) {
+
+		return orthagonalMove(x, y) || diagonalMove(x, y);
+	}
 	
 }
