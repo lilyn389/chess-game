@@ -8,8 +8,8 @@ public class Knight extends Piece {
 		super();
 	}
 	
-	public Knight(String color, String name, int row, int column) {
-		super(color, name, row, column);
+	public Knight(String color, String name, int row, int column, int ID) {
+		super(color, name, row, column,  ID);
 		if (color == "white") {
 			knight = new ImageIcon("white_knight.png");
 		}

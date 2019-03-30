@@ -4,8 +4,8 @@ public class King extends Piece {
 	
 	private ImageIcon king;
 	
-	public King(String color, String name, int row, int column) {
-		super(color, name, row, column);
+	public King(String color, String name, int row, int column, int ID) {
+		super(color, name, row, column, ID);
 		if (color == "white") {
 			king = new ImageIcon("white_king.png");
 		}
