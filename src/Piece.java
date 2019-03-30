@@ -5,6 +5,7 @@ public class Piece {
 	private String name;
 	private int row;
 	private int column;
+	private int ID;
 	
 	public Piece() {
 		color = "red";
@@ -13,11 +14,12 @@ public class Piece {
 		column = 100;
 	}
 	
-	public Piece(String color, String name, int row, int column) {
+	public Piece(String color, String name, int row, int column, int ID) {
 		this.color = color;
 		this.name = name;
 		this.row = row;
 		this.column = column;
+		this.ID = ID;
 	}
 	
 	public int getRow() {
@@ -62,5 +64,13 @@ public class Piece {
 			return true;
 		}
 		return false;
+	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
 	}
 }

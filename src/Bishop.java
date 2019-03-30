@@ -4,8 +4,8 @@ public class Bishop extends Piece {
 	
 	private ImageIcon bishop;
 	
-	public Bishop(String color, String name, int row, int column) {
-		super(color, name, row, column);
+	public Bishop(String color, String name, int row, int column, int ID) {
+		super(color, name, row, column, ID);
 		if (color == "white") {
 			bishop = new ImageIcon("white_bishop.png");
 		}
