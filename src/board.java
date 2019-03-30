@@ -9,7 +9,7 @@ public class board extends JFrame {
 	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
 	private Color maroon = new Color(128, 0, 0); // gigem 
 	private Color white = Color.WHITE;
-	private Tile[][] grid = new Tile[8][8];  // keep track of the board state
+	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
 	// move helper variables
 	private String turn;
 	private Piece selected;
