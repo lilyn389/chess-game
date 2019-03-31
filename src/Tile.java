@@ -7,6 +7,11 @@ public class Tile {
 	public Tile() {
 		empty = true;
 	}
+	
+	public Tile(Piece piece, boolean empty) {
+		this.piece = piece;
+		this.empty = empty;
+	}
 
 	public Piece getPiece() {
 		return piece;

@@ -8,8 +8,8 @@ public class Knight extends Piece {
 		super();
 	}
 	
-	public Knight(String color, String name, int row, int column) {
-		super(color, name, row, column);
+	public Knight(String color, String name, int row, int column, int ID) {
+		super(color, name, row, column, ID);
 		if (color == "white") {
 			knight = new ImageIcon("white_knight.png");
 		}
@@ -26,7 +26,10 @@ public class Knight extends Piece {
 		this.knight = knight;
 	}
 	
+	//Requires validation for a check on king
+	
 	public boolean isValidMove(int x, int y) {
+		
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
 		
