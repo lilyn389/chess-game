@@ -1,12 +1,12 @@
 
-public class Piece extends board {
+public class Piece {
 
 	protected String color;
 	protected String name;
-	private int row;
-	private int column;
-	private int ID;
-	
+	protected int row;
+	protected int column;
+	protected int ID;
+	private Tile[][] grid;
 	public Piece() {
 		color = "red";
 		name = "none";
@@ -73,7 +73,10 @@ public class Piece extends board {
 	public void setID(int iD) {
 		ID = iD;
 	}
-	
+	protected void updateGrid(Tile[][] gridIn)
+	{
+		grid = gridIn;
+	}
 	protected boolean diagonalMove(int x, int y) {
 		
 		int row_diff = Math.abs(x - this.getRow());
