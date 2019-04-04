@@ -1,5 +1,5 @@
 
-public class Piece {
+public class Piece extends board {
 
 	protected String color;
 	protected String name;
@@ -73,10 +73,12 @@ public class Piece {
 	public void setID(int iD) {
 		ID = iD;
 	}
+
 	protected void updateGrid(Tile[][] gridIn)
 	{
 		grid = gridIn;
 	}
+  
 	protected boolean diagonalMove(int x, int y) {
 		
 		int row_diff = Math.abs(x - this.getRow());
