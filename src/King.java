@@ -49,7 +49,7 @@ public class King extends Piece {
 		
 		//FUTURE FIX: invalidates moves into check
 		
-		if (row_diff == 1 && column_diff == 1) {
+		if (row_diff <= 1 && row_diff >= 0 && column_diff <= 1 && column_diff >= 0) {
 			
 			return true;
 		}

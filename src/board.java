@@ -4,10 +4,10 @@ import javax.swing.*;
 
 public class board extends JFrame {
 
-	// define the board specs
+	// define the board specifications
 	private Container space;
 	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
-	private Color maroon = new Color(128, 0, 0); // gigem 
+	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
 	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
 	// move helper variables
@@ -66,11 +66,11 @@ public class board extends JFrame {
 		bishops[0] = new Bishop("white", "bishop", 0, 2, 0);
 		grid[0][2] = new Tile(bishops[0], false);
 		bishops[1] = new Bishop("white", "bishop", 0, 5, 1);
-		grid[0][5] = new Tile(rooks[1], false);
+		grid[0][5] = new Tile(bishops[1], false);
 		bishops[2] = new Bishop("black", "bishop", 7, 2, 2);
-		grid[7][2] = new Tile(rooks[2], false);
+		grid[7][2] = new Tile(bishops[2], false);
 		bishops[3] = new Bishop("black", "bishop", 7, 5, 3);
-		grid[7][5] = new Tile(rooks[3], false);
+		grid[7][5] = new Tile(bishops[3], false);
 		// define kings
 		kings[0] = new King("white", "king", 0, 3, 0);
 		grid[0][3] = new Tile(kings[0], false);
@@ -117,7 +117,7 @@ public class board extends JFrame {
 		grid[1][7] = new Tile(pawns[15], false);
 		
 		index = 100;
-		selected = new Piece();
+	//	selected = new Piece();
 		selectedKnight = new Knight();
 		select = false;
 		turn = "white";
@@ -252,10 +252,13 @@ public class board extends JFrame {
 		
 		// move a knight
 		if (selected.getColor() == turn & selected.getName() == "knight") {
+			selectedKnight.updateGrid(grid);
 			if (selectedKnight.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedKnight.getRow()][selectedKnight.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedKnight.getIcon());
+					grid[knights[index].getRow()][knights[index].getColumn()].setPiece(null);
+					grid[knights[index].getRow()][knights[index].getColumn()].setEmpty(true);
 					knights[index].setRow(x);
 					knights[index].setColumn(y);
 					grid[x][y].setPiece(knights[index]);
@@ -274,10 +277,13 @@ public class board extends JFrame {
 		
 		// move a rook
 		if (selected.getColor() == turn & selected.getName() == "rook") {
+			selectedRook.updateGrid(grid);
 			if (selectedRook.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedRook.getRow()][selectedRook.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedRook.getIcon());
+					grid[rooks[index].getRow()][rooks[index].getColumn()].setPiece(null);
+					grid[rooks[index].getRow()][rooks[index].getColumn()].setEmpty(true);
 					rooks[index].setRow(x);
 					rooks[index].setColumn(y);
 					grid[x][y].setPiece(rooks[index]);
@@ -296,10 +302,13 @@ public class board extends JFrame {
 		
 		// move a bishop
 		if (selected.getColor() == turn & selected.getName() == "bishop") {
-			if (selectedBishop.isValidMove(x, y)) {
+			selectedBishop.updateGrid(grid);
+			if (selectedBishop.isValidMove(x, y)) {				
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedBishop.getRow()][selectedBishop.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedBishop.getIcon());
+					grid[bishops[index].getRow()][bishops[index].getColumn()].setPiece(null);
+					grid[bishops[index].getRow()][bishops[index].getColumn()].setEmpty(true);
 					bishops[index].setRow(x);
 					bishops[index].setColumn(y);
 					grid[x][y].setPiece(bishops[index]);
@@ -318,10 +327,13 @@ public class board extends JFrame {
 		
 		// move a queen
 		if (selected.getColor() == turn & selected.getName() == "queen") {
+			selectedQueen.updateGrid(grid);
 			if (selectedQueen.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedQueen.getRow()][selectedQueen.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedQueen.getIcon());
+					grid[queens[index].getRow()][queens[index].getColumn()].setPiece(null);
+					grid[queens[index].getRow()][queens[index].getColumn()].setEmpty(true);
 					queens[index].setRow(x);
 					queens[index].setColumn(y);
 					grid[x][y].setPiece(queens[index]);
@@ -338,12 +350,15 @@ public class board extends JFrame {
 			}
 		}
 		
-		// move a queen
+		// move a king
 		if (selected.getColor() == turn & selected.getName() == "king") {
+			selectedKing.updateGrid(grid);
 			if (selectedKing.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedKing.getRow()][selectedKing.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedKing.getIcon());
+					grid[kings[index].getRow()][kings[index].getColumn()].setPiece(null);
+					grid[kings[index].getRow()][kings[index].getColumn()].setEmpty(true);
 					kings[index].setRow(x);
 					kings[index].setColumn(y);
 					grid[x][y].setPiece(kings[index]);
@@ -362,10 +377,13 @@ public class board extends JFrame {
 		
 		// move a pawn
 		if (selected.getColor() == turn & selected.getName() == "pawn") {
+			selectedPawn.updateGrid(grid);
 			if (selectedPawn.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
 					tiles[selectedPawn.getRow()][selectedPawn.getColumn()].setIcon(null);
 					tiles[x][y].setIcon(selectedPawn.getIcon());
+					grid[pawns[index].getRow()][pawns[index].getColumn()].setPiece(null);
+					grid[pawns[index].getRow()][pawns[index].getColumn()].setEmpty(true);
 					pawns[index].setRow(x);
 					pawns[index].setColumn(y);
 					grid[x][y].setPiece(pawns[index]);
