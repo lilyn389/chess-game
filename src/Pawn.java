@@ -59,10 +59,19 @@ public class Pawn extends Piece {
 			return true;
 		}
 		else if (column_diff == 1 && row_diff == 1) {
-			
+			if(color == "white")
+			{
+				if(x > row)
+					return true;
+			}
+			if(color == "black")
+			{
+				if(x < row)
+					return true;
+			}
 			//Needs checks to ensure it only moves forward and check for path obstructions
 			
-			return true;
+			return false;
 		}
 		else {
 			

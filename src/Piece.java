@@ -1,12 +1,12 @@
 
-public class Piece extends board {
+public class Piece {
 
 	protected String color;
 	protected String name;
-	private int row;
-	private int column;
-	private int ID;
-	
+	protected int row;
+	protected int column;
+	protected int ID;
+	private Tile[][] grid;
 	public Piece() {
 		color = "red";
 		name = "none";
@@ -73,51 +73,95 @@ public class Piece extends board {
 	public void setID(int iD) {
 		ID = iD;
 	}
-	
+	protected void updateGrid(Tile[][] gridIn) 
+	{
+		grid = gridIn;
+	}
 	protected boolean diagonalMove(int x, int y) {
 		
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
 		
 		if (row_diff == 0) {
-			
+			System.out.println(row);
+			System.out.println(column);
+			System.out.println("error1");
 			return false;
 		}
 		
+		//System.out.println(row_diff);
+		//System.out.println(column_diff);
+		
 		if (row_diff == column_diff) {
 			
-			int minRow;
-			int minCol;
+			int row = 0;
+			int col = 0;
 			
-			if (x < this.getRow()) {
+			if (x < this.getRow() && y < this.getColumn()) {
 				
-				minRow = x + 1;
-			}
-			else {
+				row = this.getRow() - 1;
+				col = this.getColumn() - 1;
 				
-				minRow = this.getRow() + 1;
-			}
-			
-			if (y < this.getColumn()) {
-				
-				minCol = y + 1;
-			}
-			else {
-				
-				minCol = this.getColumn() + 1;
-			}
-		
-			for (int i = 0; i < row_diff - 1; i++) {
-				
-				// Checking for a clear path
-				
-				if (!grid[minRow][minCol].isEmpty()) {
+				for (int i = 0; i < row_diff - 1; i++) {
 					
-					return false;	//Path is not clear
+					// Checking for a clear path
+					
+					if (!grid[row][col].isEmpty()) {
+
+						return false;	//Path is not clear
+					}
+					
+					col--;
+					row--;
 				}
+			}
+			else if (x < this.getRow() && y > this.getColumn()) {
 				
-				minCol++;
-				minRow++;
+				row = this.getRow() - 1;
+				col = this.getColumn() + 1;
+				
+				for (int i = 0; i < row_diff - 1; i++) {
+					
+					if (!grid[row][col].isEmpty()) {
+
+						return false;
+					}
+					
+					col++;
+					row--;
+				}
+			}
+			else if (x > this.getRow() && y < this.getColumn()) {
+				
+				row = this.getRow() + 1;
+				col = this.getColumn() - 1;
+				
+				for (int i = 0; i < row_diff - 1; i++) {
+					
+					if (!grid[row][col].isEmpty()) {
+
+						return false;
+					}
+					
+					col--;
+					row++;
+				}
+			}
+			else if (x > this.getRow() && y > this.getColumn()) {
+				
+				row = this.getRow() + 1;
+				col = this.getColumn() + 1;
+				
+				for (int i = 0; i < row_diff - 1; i++) {
+
+					if (!grid[row][col].isEmpty()) {
+
+						return false;
+					}
+					
+					col++;
+					row++;
+				}
 			}
 			
 			// Path is clear
@@ -125,6 +169,7 @@ public class Piece extends board {
 		}
 		else {
 			
+			System.out.println("error2");
 			return false;
 		}
 	}
