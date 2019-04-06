@@ -298,5 +298,3 @@ public class King extends Piece {
 		return true;   // the king is in check mate
 	}
 }
-
-

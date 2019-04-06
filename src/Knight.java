@@ -10,6 +10,7 @@ public class Knight extends Piece {
 	
 	public Knight(String color, String name, int row, int column, int ID, boolean alive) {
 		super(color, name, row, column, ID, alive);
+
 		if (color == "white") {
 			knight = new ImageIcon("white_knight.png");
 		}
