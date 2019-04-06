@@ -6,8 +6,8 @@ public class Pawn extends Piece {
 	
 	private boolean firstMove = true;
 	
-	public Pawn(String color, String name, int row, int column, int ID) {
-		super(color, name, row, column, ID);
+	public Pawn(String color, String name, int row, int column, int ID, boolean alive) {
+		super(color, name, row, column, ID, alive);
 		if (color == "white") {
 			pawn = new ImageIcon("white_pawn.png");
 		}
@@ -25,6 +25,10 @@ public class Pawn extends Piece {
 	}
 	
 	public boolean isValidMove(int x, int y) {
+		
+		if (row == x && y == column) {
+			return false;
+		}
 		
 		if (firstMove) {
 			

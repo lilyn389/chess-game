@@ -8,8 +8,8 @@ public class Knight extends Piece {
 		super();
 	}
 	
-	public Knight(String color, String name, int row, int column, int ID) {
-		super(color, name, row, column,  ID);
+	public Knight(String color, String name, int row, int column, int ID, boolean alive) {
+		super(color, name, row, column, ID, alive);
 		if (color == "white") {
 			knight = new ImageIcon("white_knight.png");
 		}
@@ -26,7 +26,14 @@ public class Knight extends Piece {
 		this.knight = knight;
 	}
 	
+	//***FIXME*** need to add (in very isValidMove) a check to see if this move 
+	// puts your own king in check, this is an invalid move
 	public boolean isValidMove(int x, int y) {
+		
+		if (row == x && y == column) {
+			return false;
+		}
+		
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
 		

@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
 
 public class board extends JFrame {
 
@@ -10,6 +11,7 @@ public class board extends JFrame {
 	private Color maroon = new Color(128, 0, 0); // gigem 
 	private Color white = Color.WHITE;
 	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
+	
 	// move helper variables
 	private String turn;
 	private Piece selected;
@@ -21,6 +23,10 @@ public class board extends JFrame {
 	private Pawn selectedPawn;
 	private boolean select;
 	private int index;
+	
+	private Vector<Piece> white_pieces;  // vector to keep track of white pieces
+	private Vector<Piece> black_pieces;  // vector to keep track of black pieces
+	
 	// declare knights
 	private Knight[] knights = new Knight[4];
 	// declare rooks
@@ -44,83 +50,123 @@ public class board extends JFrame {
 			}
 		}
 		
-		// define knights and place them on grid
-		knights[0] = new Knight("white", "knight", 0, 1, 0);
-		grid[0][1] = new Tile(knights[0], false);
-		knights[1] = new Knight("white", "knight", 0, 6, 1);
-		grid[0][6] = new Tile(knights[1], false);
-		knights[2] = new Knight("black", "knight", 7, 1, 2);
-		grid[7][1] = new Tile(knights[2], false);
-		knights[3] = new Knight("black", "knight", 7, 6, 3);
-		grid[7][6] = new Tile(knights[3], false);
-		// define rooks
-		rooks[0] = new Rook("white", "rook", 0, 0, 0);
-		grid[0][0] = new Tile(rooks[0], false);
-		rooks[1] = new Rook("white", "rook", 0, 7, 1);
-		grid[0][7] = new Tile(rooks[1], false);
-		rooks[2] = new Rook("black", "rook", 7, 0, 2);
-		grid[7][0] = new Tile(rooks[2], false);
-		rooks[3] = new Rook("black", "rook", 7, 7, 3);
-		grid[7][7] = new Tile(rooks[3], false);
-		// define bishops
-		bishops[0] = new Bishop("white", "bishop", 0, 2, 0);
-		grid[0][2] = new Tile(bishops[0], false);
-		bishops[1] = new Bishop("white", "bishop", 0, 5, 1);
-		grid[0][5] = new Tile(rooks[1], false);
-		bishops[2] = new Bishop("black", "bishop", 7, 2, 2);
-		grid[7][2] = new Tile(rooks[2], false);
-		bishops[3] = new Bishop("black", "bishop", 7, 5, 3);
-		grid[7][5] = new Tile(rooks[3], false);
-		// define kings
-		kings[0] = new King("white", "king", 0, 3, 0);
-		grid[0][3] = new Tile(kings[0], false);
-		kings[1] = new King("black", "king", 7, 3, 1);
-		grid[7][3] = new Tile(kings[1], false);
-		// define queens
-		queens[0] = new Queen("white", "queen", 0, 4, 0);
-		grid[0][4] = new Tile(queens[0], false);
-		queens[1] = new Queen("black", "queen", 7, 4, 1);
-		grid[7][4] = new Tile(queens[1], false);
-		// define black pawns
-		pawns[0] = new Pawn("black", "pawn", 6, 0, 0);
-		grid[6][0] = new Tile(pawns[0], false);
-		pawns[1] = new Pawn("black", "pawn", 6, 1, 1);
-		grid[6][1] = new Tile(pawns[1], false);
-		pawns[2] = new Pawn("black", "pawn", 6, 2, 2);
-		grid[6][2] = new Tile(pawns[2], false);
-		pawns[3] = new Pawn("black", "pawn", 6, 3, 3);
-		grid[6][3] = new Tile(pawns[3], false);
-		pawns[4] = new Pawn("black", "pawn", 6, 4, 4);
-		grid[6][4] = new Tile(pawns[4], false);
-		pawns[5] = new Pawn("black", "pawn", 6, 5, 5);
-		grid[6][5] = new Tile(pawns[5], false);
-		pawns[6] = new Pawn("black", "pawn", 6, 6, 6);
-		grid[6][6] = new Tile(pawns[6], false);
-		pawns[7] = new Pawn("black", "pawn", 6, 7, 7);
-		grid[6][7] = new Tile(pawns[7], false);
-		// define white pawns
-		pawns[8] = new Pawn("white", "pawn", 1, 0, 8);
-		grid[1][0] = new Tile(pawns[8], false);
-		pawns[9] = new Pawn("white", "pawn", 1, 1, 9);
-		grid[1][1] = new Tile(pawns[9], false);
-		pawns[10] = new Pawn("white", "pawn", 1, 2, 10);
-		grid[1][2] = new Tile(pawns[10], false);
-		pawns[11] = new Pawn("white", "pawn", 1, 3, 11);
-		grid[1][3] = new Tile(pawns[11], false);
-		pawns[12] = new Pawn("white", "pawn", 1, 4, 12);
-		grid[1][4] = new Tile(pawns[12], false);
-		pawns[13] = new Pawn("white", "pawn", 1, 5, 13);
-		grid[1][5] = new Tile(pawns[13], false);
-		pawns[14] = new Pawn("white", "pawn", 1, 6, 14);
-		grid[1][6] = new Tile(pawns[14], false);
-		pawns[15] = new Pawn("white", "pawn", 1, 7, 15);
-		grid[1][7] = new Tile(pawns[15], false);
+		// initialize piece vectors 
+		white_pieces = new Vector<Piece>();
+		black_pieces = new Vector<Piece>();
 		
-		index = 100;
-	//	selected = new Piece();
-		selectedKnight = new Knight();
-		select = false;
-		turn = "white";
+		// define knights and place them on grid
+		knights[0] = new Knight("white", "knight", 0, 1, 0, true);
+		grid[0][1] = new Tile(knights[0], false);  // set them on the tile
+		knights[1] = new Knight("white", "knight", 0, 6, 1, true);
+		grid[0][6] = new Tile(knights[1], false);
+		white_pieces.addElement(knights[0]);   // add them to the vector
+		white_pieces.addElement(knights[1]);
+		knights[2] = new Knight("black", "knight", 7, 1, 2, true);
+		grid[7][1] = new Tile(knights[2], false);
+		knights[3] = new Knight("black", "knight", 7, 6, 3, true);
+		grid[7][6] = new Tile(knights[3], false);
+		black_pieces.addElement(knights[2]);
+		black_pieces.addElement(knights[3]);
+		// define rooks
+		rooks[0] = new Rook("white", "rook", 0, 0, 0, true);
+		grid[0][0] = new Tile(rooks[0], false);
+		rooks[1] = new Rook("white", "rook", 0, 7, 1, true);
+		grid[0][7] = new Tile(rooks[1], false);
+		white_pieces.addElement(rooks[0]);
+		white_pieces.addElement(rooks[1]);
+		rooks[2] = new Rook("black", "rook", 7, 0, 2, true);
+		grid[7][0] = new Tile(rooks[2], false);
+		rooks[3] = new Rook("black", "rook", 7, 7, 3, true);
+		grid[7][7] = new Tile(rooks[3], false);
+		black_pieces.addElement(rooks[2]);
+		black_pieces.addElement(rooks[3]);
+		// define bishops
+		bishops[0] = new Bishop("white", "bishop", 0, 2, 0, true);
+		grid[0][2] = new Tile(bishops[0], false);
+		bishops[1] = new Bishop("white", "bishop", 0, 5, 1, true);
+		grid[0][5] = new Tile(rooks[1], false);
+		white_pieces.addElement(bishops[0]);
+		white_pieces.addElement(bishops[1]);
+		bishops[2] = new Bishop("black", "bishop", 7, 2, 2, true);
+		grid[7][2] = new Tile(rooks[2], false);
+		bishops[3] = new Bishop("black", "bishop", 7, 5, 3, true);
+		grid[7][5] = new Tile(rooks[3], false);
+		black_pieces.addElement(bishops[2]);
+		black_pieces.addElement(bishops[3]);
+		// define kings
+		kings[0] = new King("white", "king", 0, 3, 0, true);
+		grid[0][3] = new Tile(kings[0], false);
+		white_pieces.addElement(kings[0]);
+		kings[1] = new King("black", "king", 7, 3, 1, true);
+		grid[7][3] = new Tile(kings[1], false);
+		black_pieces.addElement(kings[1]);
+		// define queens
+		queens[0] = new Queen("white", "queen", 0, 4, 0, true);
+		grid[0][4] = new Tile(queens[0], false);
+		white_pieces.addElement(queens[0]);
+		queens[1] = new Queen("black", "queen", 7, 4, 1, true);
+		grid[7][4] = new Tile(queens[1], false);
+		black_pieces.addElement(queens[1]);
+		// define black pawns
+		pawns[0] = new Pawn("black", "pawn", 6, 0, 0, true);
+		grid[6][0] = new Tile(pawns[0], false);
+		pawns[1] = new Pawn("black", "pawn", 6, 1, 1, true);
+		grid[6][1] = new Tile(pawns[1], false);
+		pawns[2] = new Pawn("black", "pawn", 6, 2, 2, true);
+		grid[6][2] = new Tile(pawns[2], false);
+		pawns[3] = new Pawn("black", "pawn", 6, 3, 3, true);
+		grid[6][3] = new Tile(pawns[3], false);
+		pawns[4] = new Pawn("black", "pawn", 6, 4, 4, true);
+		grid[6][4] = new Tile(pawns[4], false);
+		pawns[5] = new Pawn("black", "pawn", 6, 5, 5, true);
+		grid[6][5] = new Tile(pawns[5], false);
+		pawns[6] = new Pawn("black", "pawn", 6, 6, 6, true);
+		grid[6][6] = new Tile(pawns[6], false);
+		pawns[7] = new Pawn("black", "pawn", 6, 7, 7, true);
+		grid[6][7] = new Tile(pawns[7], false);
+		black_pieces.addElement(pawns[0]);
+		black_pieces.addElement(pawns[1]);
+		black_pieces.addElement(pawns[2]);
+		black_pieces.addElement(pawns[3]);
+		black_pieces.addElement(pawns[4]);
+		black_pieces.addElement(pawns[5]);
+		black_pieces.addElement(pawns[6]);
+		black_pieces.addElement(pawns[7]);
+		// define white pawns
+		pawns[8] = new Pawn("white", "pawn", 1, 0, 8, true);
+		grid[1][0] = new Tile(pawns[8], false);
+		pawns[9] = new Pawn("white", "pawn", 1, 1, 9, true);
+		grid[1][1] = new Tile(pawns[9], false);
+		pawns[10] = new Pawn("white", "pawn", 1, 2, 10, true);
+		grid[1][2] = new Tile(pawns[10], false);
+		pawns[11] = new Pawn("white", "pawn", 1, 3, 11, true);
+		grid[1][3] = new Tile(pawns[11], false);
+		pawns[12] = new Pawn("white", "pawn", 1, 4, 12, true);
+		grid[1][4] = new Tile(pawns[12], false);
+		pawns[13] = new Pawn("white", "pawn", 1, 5, 13, true);
+		grid[1][5] = new Tile(pawns[13], false);
+		pawns[14] = new Pawn("white", "pawn", 1, 6, 14, true);
+		grid[1][6] = new Tile(pawns[14], false);
+		pawns[15] = new Pawn("white", "pawn", 1, 7, 15, true);
+		grid[1][7] = new Tile(pawns[15], false);
+		white_pieces.addElement(pawns[8]);
+		white_pieces.addElement(pawns[9]);
+		white_pieces.addElement(pawns[10]);
+		white_pieces.addElement(pawns[11]);
+		white_pieces.addElement(pawns[12]);
+		white_pieces.addElement(pawns[13]);
+		white_pieces.addElement(pawns[14]);
+		white_pieces.addElement(pawns[15]);
+		
+		// associate the pieces with their king
+		kings[0].setPieces(white_pieces);
+		kings[0].setEnemyPieces(black_pieces);
+		kings[1].setPieces(black_pieces);
+		kings[1].setEnemyPieces(white_pieces);
+		
+		index = 100; 
+		select = false; // true if a valid piece has been clicked on by a player
+		turn = "white";  // white moves first
 		
 		space = getContentPane();
 		space.setLayout(new GridLayout (8, 8));
@@ -133,14 +179,14 @@ public class board extends JFrame {
 			for (int j = 0; j < 8; j++) {
 				tiles[i][j] = new JButton();
 				if ((i + j) % 2 != 0) {
-					tiles[i][j].setBackground(maroon);
+					tiles[i][j].setBackground(maroon);  // color the maroon pieces
 				}
 				else {
-					tiles[i][j].setBackground(white);
+					tiles[i][j].setBackground(white);  // color the white pieces 
 				}
-				space.add(tiles[i][j]);
+				space.add(tiles[i][j]);  // place it on the board
 				
-				tiles[i][j].addActionListener(handleClick);
+				tiles[i][j].addActionListener(handleClick);  // set listener for each tile button
 			}
 		}
 				
@@ -186,12 +232,53 @@ public class board extends JFrame {
 		
 		
 		
-		setSize(900, 900);
-		setResizable(false);
+		setSize(900, 900);  // size of the board
+		setResizable(true); 
 		setLocationRelativeTo(null);  // centers window
-		setVisible(true);
+		setVisible(true);  // we need to see it
 	}
 	
+	
+	public Vector<Piece> getWhitePieces() {
+		return white_pieces;
+	}
+
+
+	public void setWhitePieces(Vector<Piece> white_pieces) {
+		this.white_pieces = white_pieces;
+	}
+
+
+	public Vector<Piece> getBlackPieces() {
+		return black_pieces;
+	}
+
+
+	public void setBlackPieces(Vector<Piece> black_pieces) {
+		this.black_pieces = black_pieces;
+	}
+
+	public Tile[][] getGrid() {
+		return grid;
+	}
+
+
+	public void setGrid(Tile[][] grid) {
+		this.grid = grid;
+	}
+
+	public King[] getKings() {
+		return kings;
+	}
+
+
+	public void setKings(King[] kings) {
+		this.kings = kings;
+	}
+
+
+	// this function is called when a player selects a piece they want to move
+	// it validates the selection
 	private int processSelection(int x, int y) {
 		
 		if (grid[x][y].isEmpty()) {
@@ -243,15 +330,22 @@ public class board extends JFrame {
 		return -1; 
 	}
 	
+	// this function is called when someone clicks on one of the pieces, regardless of state
 	private void processClick(int x, int y) {
+		
+		// variable for keeping track of whether we moved or not
+		boolean moved = false;
+		
 		// check if there is a piece selected. 
+		// if there is not, then process the selection
 		if (select == false) {
 			index = processSelection(x, y);
 			return;
 		}
+		// if a piece is selected, then check if the move is valid 
 		
 		// move a knight
-		if (selected.getColor() == turn & selected.getName() == "knight") {
+		else if (selected.getColor() == turn & selected.getName() == "knight") {
 			selectedKnight.updateGrid(grid);
 			if (selectedKnight.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
@@ -263,20 +357,13 @@ public class board extends JFrame {
 					knights[index].setColumn(y);
 					grid[x][y].setPiece(knights[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
+					moved = true;
 				}
-				return;
 			}
 		}
 		
 		// move a rook
-		if (selected.getColor() == turn & selected.getName() == "rook") {
+		else if (selected.getColor() == turn & selected.getName() == "rook") {
 			selectedRook.updateGrid(grid);
 			if (selectedRook.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
@@ -288,20 +375,13 @@ public class board extends JFrame {
 					rooks[index].setColumn(y);
 					grid[x][y].setPiece(rooks[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
-				}
-				return;
-			}
+					moved = true;
+			  }
+		   }
 		}
 		
 		// move a bishop
-		if (selected.getColor() == turn & selected.getName() == "bishop") {
+		else if (selected.getColor() == turn & selected.getName() == "bishop") {
 			selectedBishop.updateGrid(grid);
 			if (selectedBishop.isValidMove(x, y)) {				
 				if (checkMoveLocation(x, y)) {
@@ -313,20 +393,13 @@ public class board extends JFrame {
 					bishops[index].setColumn(y);
 					grid[x][y].setPiece(bishops[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
-					return;
+					moved = true;
 				}
 			}
 		}
 		
 		// move a queen
-		if (selected.getColor() == turn & selected.getName() == "queen") {
+		else if (selected.getColor() == turn & selected.getName() == "queen") {
 			selectedQueen.updateGrid(grid);
 			if (selectedQueen.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
@@ -338,20 +411,13 @@ public class board extends JFrame {
 					queens[index].setColumn(y);
 					grid[x][y].setPiece(queens[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
-					return;
+					moved = true;
 				}
 			}
 		}
 		
 		// move a king
-		if (selected.getColor() == turn & selected.getName() == "king") {
+		else if (selected.getColor() == turn & selected.getName() == "king") {
 			selectedKing.updateGrid(grid);
 			if (selectedKing.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
@@ -363,20 +429,13 @@ public class board extends JFrame {
 					kings[index].setColumn(y);
 					grid[x][y].setPiece(kings[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
-					return;
+					moved = true;
 				}
 			}
 		}
 		
 		// move a pawn
-		if (selected.getColor() == turn & selected.getName() == "pawn") {
+		else if (selected.getColor() == turn & selected.getName() == "pawn") {
 			selectedPawn.updateGrid(grid);
 			if (selectedPawn.isValidMove(x, y)) {
 				if (checkMoveLocation(x, y)) {
@@ -388,18 +447,47 @@ public class board extends JFrame {
 					pawns[index].setColumn(y);
 					grid[x][y].setPiece(pawns[index]);
 					grid[x][y].setEmpty(false);
-					select = false;
-					if (turn == "white") {
-						turn = "black";
-					}
-					else {
-						turn = "white";
-					}
-					return;
+					moved = true;
 				}
 			}
 		}
-		select = false;  // reset 
+		
+		if (moved) {
+			select = false;  // reset
+			// run isCheck & isCheckMate
+			if (kings[0].getColor() != turn) {
+				if (kings[0].isCheck()) {
+					if (kings[0].isCheckMate()) {
+						// game over
+						gameOver(kings[0].getColor());
+					}
+					else {
+						// warn the other team that they are in check
+						JOptionPane.showMessageDialog(space, "White King is in check!");
+					}
+				}
+			}
+			else if (kings[1].getColor() != turn) {
+				if (kings[1].isCheck()) {
+					if (kings[1].isCheckMate()) {
+						// game over
+						gameOver(kings[1].getColor());
+					}
+					else {
+						// warn the other team that they are in check
+						JOptionPane.showMessageDialog(space, "Black King is in check!");
+					}
+				}
+			}
+	
+			if (turn == "white") {
+				turn = "black";
+			}
+			else {
+				turn = "white";
+			}
+		}
+		return;
 	}
 	
 	// This function checks the location that the player is trying to move their piece to
@@ -413,16 +501,21 @@ public class board extends JFrame {
 			}
 			else {  // if it is an enemy piece, move there and kill the piece
 				grid[x][y].setEmpty(true);  // empty piece from grid
+				grid[x][y].getPiece().setIsAlive(false); // kill the piece
 				return true;
 			}
 		}
+	}
+	
+	private void gameOver(String winner) {
+		JOptionPane.showMessageDialog(space, winner + "is the winner!");
 	}
 	
 	
 	private class ButtonHandler implements ActionListener {
 		
 		public void actionPerformed(ActionEvent event) {
-			
+			// find which tile was clicked, pass that location as a param to processClick()
 			Object source = event.getSource();	
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
