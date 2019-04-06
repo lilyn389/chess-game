@@ -5,10 +5,10 @@ import java.util.*;
 
 public class board extends JFrame {
 
-	// define the board specs
+	// define the board specifications
 	private Container space;
 	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
-	private Color maroon = new Color(128, 0, 0); // gigem 
+	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
 	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
 	
@@ -23,10 +23,9 @@ public class board extends JFrame {
 	private Pawn selectedPawn;
 	private boolean select;
 	private int index;
-	
 	private Vector<Piece> white_pieces;  // vector to keep track of white pieces
 	private Vector<Piece> black_pieces;  // vector to keep track of black pieces
-	
+	private int numOfQueens = 2;
 	// declare knights
 	private Knight[] knights = new Knight[4];
 	// declare rooks
@@ -34,7 +33,7 @@ public class board extends JFrame {
 	// declare bishops
 	private Bishop[] bishops = new Bishop[4];
 	// declare Queens
-	private Queen[] queens = new Queen[2];
+	private Queen[] queens = new Queen[18];
 	// declare Kings
 	private King[] kings = new King[2];
 	// declare black pawns
@@ -93,6 +92,7 @@ public class board extends JFrame {
 		grid[7][5] = new Tile(rooks[3], false);
 		black_pieces.addElement(bishops[2]);
 		black_pieces.addElement(bishops[3]);
+
 		// define kings
 		kings[0] = new King("white", "king", 0, 3, 0, true);
 		grid[0][3] = new Tile(kings[0], false);
@@ -157,7 +157,7 @@ public class board extends JFrame {
 		white_pieces.addElement(pawns[13]);
 		white_pieces.addElement(pawns[14]);
 		white_pieces.addElement(pawns[15]);
-		
+
 		// associate the pieces with their king
 		kings[0].setPieces(white_pieces);
 		kings[0].setEnemyPieces(black_pieces);
@@ -448,6 +448,15 @@ public class board extends JFrame {
 					grid[x][y].setPiece(pawns[index]);
 					grid[x][y].setEmpty(false);
 					moved = true;
+          //Pawn promotion
+					if (y == 0 || y = 7) {
+						
+						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
+						grid[x][y].setPiece(queens[numOfQueens]);
+						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
+						
+						numOfQueens++;
+					}
 				}
 			}
 		}
