@@ -5,8 +5,8 @@ public class Rook extends Piece {
 	private ImageIcon rook;
 
 	
-	public Rook(String color, String name, int row, int column, int ID) {
-		super(color, name, row, column, ID);
+	public Rook(String color, String name, int row, int column, int ID, boolean alive) {
+		super(color, name, row, column, ID, alive);
 		if (color == "white") {
 			rook = new ImageIcon("white_castle.png");
 		}
@@ -24,6 +24,10 @@ public class Rook extends Piece {
 	}
 	
 	public boolean isValidMove(int x, int y) {
+		
+		if (row == x && y == column) {
+			return false;
+		}
 	
 		//Check for path obstruction
 	

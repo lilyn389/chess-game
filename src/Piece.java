@@ -1,12 +1,13 @@
-
-public class Piece {
+public abstract class Piece {
 
 	protected String color;
 	protected String name;
 	protected int row;
 	protected int column;
 	protected int ID;
-	private Tile[][] grid;
+	protected boolean is_alive;  // true if the piece is alive and on the board
+	protected Tile[][] grid;
+  
 	public Piece() {
 		color = "red";
 		name = "none";
@@ -14,12 +15,13 @@ public class Piece {
 		column = 100;
 	}
 	
-	public Piece(String color, String name, int row, int column, int ID) {
+	public Piece(String color, String name, int row, int column, int ID, boolean alive) {
 		this.color = color;
 		this.name = name;
 		this.row = row;
 		this.column = column;
 		this.ID = ID;
+		is_alive = alive;
 	}
 	
 	public int getRow() {
@@ -54,6 +56,14 @@ public class Piece {
 		this.color = color;
 	}
 	
+	public boolean isAlive() {
+		return is_alive;
+	}
+
+	public void setIsAlive(boolean is_alive) {
+		this.is_alive = is_alive;
+	}
+
 	public void empty() {
 		color = "red";
 		name = "none";
@@ -73,10 +83,14 @@ public class Piece {
 	public void setID(int iD) {
 		ID = iD;
 	}
-	protected void updateGrid(Tile[][] gridIn) 
+  
+	protected void updateGrid(Tile[][] gridIn)
 	{
 		grid = gridIn;
 	}
+	
+	public abstract boolean isValidMove(int x, int y);  // implemented in the specific piece classes
+	
 	protected boolean diagonalMove(int x, int y) {
 		
 		int row_diff = Math.abs(x - this.getRow());
