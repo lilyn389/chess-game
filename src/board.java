@@ -5,7 +5,7 @@ import javax.swing.*;
 public class board extends JFrame {
 
 	// define the board specifications
-	JFrame space = new JFrame("Chess");
+	private Container space;
 	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
 	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
@@ -21,6 +21,7 @@ public class board extends JFrame {
 	private Pawn selectedPawn;
 	private boolean select;
 	private int index;
+	private int numOfQueens = 2;
 	// declare knights
 	private Knight[] knights = new Knight[4];
 	// declare rooks
@@ -28,72 +29,14 @@ public class board extends JFrame {
 	// declare bishops
 	private Bishop[] bishops = new Bishop[4];
 	// declare Queens
-	private Queen[] queens = new Queen[2];
+	private Queen[] queens = new Queen[18];
 	// declare Kings
 	private King[] kings = new King[2];
 	// declare black pawns
 	private Pawn[] pawns = new Pawn[16];
-	JMenuBar menuBar;
-    	JMenu menu;
-    	JMenuItem c1, c2, c3;
 	
 	public board() {    // constructor
-        //menu bar
-        menuBar = new JMenuBar();
-        menu = new JMenu("Options");
-        
-        //menu choice: concede
-        c1 = new JMenuItem("Concede");
-        c1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Object[] options = {"Exit", "Main menu"};
-                int n = JOptionPane.showOptionDialog(space, "Final Board State", "End Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                if (n == JOptionPane.YES_OPTION)
-                    System.exit(NORMAL);
-                else {
-                    new Menu();
-                    space.dispose();
-                }
-            }
-        });
-        
-        //menu choice: draw
-        c2 = new JMenuItem("Draw");
-        c2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(space, "Draw?", "Draw", JOptionPane.OK_CANCEL_OPTION);
-                
-                if (result == JOptionPane.YES_OPTION) {
-                    Object[] options = {"Exit", "Main menu"};
-                    int n = JOptionPane.showOptionDialog(space, "Final Board State", "End Game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    if (n == JOptionPane.YES_OPTION)
-                        System.exit(NORMAL);
-                    else {
-                        new Menu();
-                        space.dispose();
-                    }
-                }
-            }
-        });
-        
-        //menu choice: exit game
-        c3 = new JMenuItem("Exit");
-        c3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(space, "Are you sure you want to exit the application?", "Warning", JOptionPane.OK_CANCEL_OPTION);
-                
-                if (result == JOptionPane.YES_OPTION)
-                    System.exit(NORMAL);
-            }
-        });
-        menu.add(c1);
-        menu.add(c2);
-        menu.add(c3);
-        menuBar.add(menu);
-        
+		super("Chess Board");
 		
 		// build board manager 
 		for (int i = 0; i < 8; i++) {
@@ -180,7 +123,7 @@ public class board extends JFrame {
 		select = false;
 		turn = "white";
 		
-		//space = getContentPane();
+		space = getContentPane();
 		space.setLayout(new GridLayout (8, 8));
 		
 		// event handler
@@ -243,12 +186,11 @@ public class board extends JFrame {
 		tiles[pawns[15].getRow()][pawns[15].getColumn()].setIcon(pawns[15].getIcon());
 		
 		
-        space.setJMenuBar(menuBar);
-        space.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		space.setSize(900, 900);
-		space.setResizable(false);
-		space.setLocationRelativeTo(null);  // centers window
-		space.setVisible(true);
+		
+		setSize(900, 900);
+		setResizable(false);
+		setLocationRelativeTo(null);  // centers window
+		setVisible(true);
 	}
 	
 	private int processSelection(int x, int y) {
@@ -448,6 +390,17 @@ public class board extends JFrame {
 					grid[x][y].setPiece(pawns[index]);
 					grid[x][y].setEmpty(false);
 					select = false;
+					
+					//Pawn promotion
+					if (y == 0 || y = 7) {
+						
+						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
+						grid[x][y].setPiece(queens[numOfQueens]);
+						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
+						
+						numOfQueens++;
+					}
+					
 					if (turn == "white") {
 						turn = "black";
 					}
@@ -493,5 +446,6 @@ public class board extends JFrame {
 			}
 		}
 	}
-    
 }
+	
+
