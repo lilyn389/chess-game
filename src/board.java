@@ -346,17 +346,6 @@ public class board extends JFrame {
 					queens[index].setColumn(y);
 					grid[x][y].setPiece(queens[index]);
 					grid[x][y].setEmpty(false);
-					
-					//Pawn promotion
-					if (y == 0 || y = 7) {
-						
-						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
-						grid[x][y].setPiece(queens[numOfQueens]);
-						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
-						
-						numOfQueens++;
-					}
-					
 					select = false;
 					if (turn == "white") {
 						turn = "black";
@@ -414,6 +403,17 @@ public class board extends JFrame {
 					else {
 						turn = "white";
 					}
+						
+					//Pawn promotion
+					if (y == 0 || y = 7) {
+						
+						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
+						grid[x][y].setPiece(queens[numOfQueens]);
+						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
+						
+						numOfQueens++;
+					}
+					
 					return;
 				}
 			}
