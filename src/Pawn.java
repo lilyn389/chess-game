@@ -31,7 +31,24 @@ public class Pawn extends Piece {
 			int row_diff = Math.abs(x - this.getRow());
 			int column_diff = Math.abs(y - this.getColumn());
 			
-			if (column_diff == 0 && row_diff == 2) {
+			if (column_diff == 0 && row_diff == 2 && !grid[x][y].isEmpty()) {
+				
+				if(color == "white")
+				{
+					
+					if (!grid[this.getRow() + 1][y].isEmpty()) {
+						
+						return false;
+					}
+				}
+				else if(color == "black")
+				{
+					
+					if (!grid[this.getRow() - 1][y].isEmpty()) {
+						
+						return false;
+					}
+				}
 				
 				firstMove = false;
 				return true;
@@ -54,11 +71,38 @@ public class Pawn extends Piece {
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
 		
+		//Normal move
 		if (column_diff == 0 && row_diff == 1) {
 			
-			return true;
+			//Piece blocking move
+			if (!grid[x][y].isEmpty()) {
+				
+				return false;
+			}
+		
+			//Ensuring only forward moves
+			if(color == "white")
+			{
+				if(x > row)
+					return true;
+			}
+			if(color == "black")
+			{
+				if(x < row)
+					return true;
+			}
+			
+			return false;
 		}
+		//Attack condition
 		else if (column_diff == 1 && row_diff == 1) {
+			
+			//No attack taking place
+			if (grid[x][y].isEmpty()) {
+				
+				return false;
+			}
+			//Ensuring only forward attacks
 			if(color == "white")
 			{
 				if(x > row)
