@@ -22,6 +22,7 @@ public class board extends JFrame {
 	private Pawn selectedPawn;
 	private boolean select;
 	private int index;
+	private int numOfQueens = 2;
 	// declare knights
 	private Knight[] knights = new Knight[4];
 	// declare rooks
@@ -29,7 +30,7 @@ public class board extends JFrame {
 	// declare bishops
 	private Bishop[] bishops = new Bishop[4];
 	// declare Queens
-	private Queen[] queens = new Queen[2];
+	private Queen[] queens = new Queen[18];
 	// declare Kings
 	private King[] kings = new King[2];
 	// declare black pawns
@@ -345,6 +346,17 @@ public class board extends JFrame {
 					queens[index].setColumn(y);
 					grid[x][y].setPiece(queens[index]);
 					grid[x][y].setEmpty(false);
+					
+					//Pawn promotion
+					if (y == 0 || y = 7) {
+						
+						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
+						grid[x][y].setPiece(queens[numOfQueens]);
+						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
+						
+						numOfQueens++;
+					}
+					
 					select = false;
 					if (turn == "white") {
 						turn = "black";
