@@ -87,6 +87,7 @@ public class King extends Piece {
 		int column_diff = Math.abs(y - this.getColumn());
 		
 		//FUTURE FIX: invalidates moves into check
+    
 		if (row_diff <= 1 && row_diff >= 0 && column_diff <= 1 && column_diff >= 0) {
 			
 			return true;
