@@ -495,6 +495,10 @@ public class board extends JFrame {
 	}
 	
 	
+	private void gameOver(String winner) {
+		JOptionPane.showMessageDialog(space, winner + "is the winner!");
+	}
+	
 	private class ButtonHandler implements ActionListener {
 		
 		public void actionPerformed(ActionEvent event) {
