@@ -35,7 +35,7 @@ public class Pawn extends Piece {
 			int row_diff = Math.abs(x - this.getRow());
 			int column_diff = Math.abs(y - this.getColumn());
 			
-			if (column_diff == 0 && row_diff == 2 && !grid[x][y].isEmpty()) {
+			if (column_diff == 0 && row_diff == 2 && grid[x][y].isEmpty()) {
 				
 				if(color == "white")
 				{

@@ -90,7 +90,9 @@ public class InitializationMenu implements ActionListener {
         if (e.getSource() == player_1)
             cl.show(cards, "MyPanel2");
         if (e.getSource() == begin) {
-            new board();
+            board chess_gui = new board();
+            chess_gui.getKings()[0].setGrid(chess_gui.getGrid());
+    		chess_gui.getKings()[1].setGrid(chess_gui.getGrid());
             f.dispose();
         }
         if (e.getSource() == player_2)

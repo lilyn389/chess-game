@@ -449,9 +449,9 @@ public class board extends JFrame {
 					grid[x][y].setEmpty(false);
 					moved = true;
           //Pawn promotion
-					if (y == 0 || y = 7) {
+					if (y == 0 || y == 7) {
 						
-						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens);
+						queens[numOfQueens] = new Queen(selectedPawn.getColor(), selectedPawn.getName(), x, y, numOfQueens, true);
 						grid[x][y].setPiece(queens[numOfQueens]);
 						tiles[x][y].setIcon(queens[numOfQueens].getIcon());
 						
@@ -496,6 +496,7 @@ public class board extends JFrame {
 				turn = "white";
 			}
 		}
+		select = false;
 		return;
 	}
 	
