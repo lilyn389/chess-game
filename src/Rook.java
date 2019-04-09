@@ -35,4 +35,10 @@ public class Rook extends Piece {
 		
 		return orthagonalMove(x, y);
 	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -26,4 +26,10 @@ public class Bishop extends Piece {
 	
 		return diagonalMove(x, y);
 	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

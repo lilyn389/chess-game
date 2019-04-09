@@ -1,5 +1,6 @@
+import javax.swing.ImageIcon;
 
-public class Piece {
+public abstract class Piece {
 
 	protected String color;
 	protected String name;
@@ -7,6 +8,7 @@ public class Piece {
 	protected int column;
 	protected int ID;
 	private Tile[][] grid;
+	private ImageIcon notUsed;
 	public Piece() {
 		color = "red";
 		name = "none";
@@ -76,6 +78,9 @@ public class Piece {
 	protected void updateGrid(Tile[][] gridIn) 
 	{
 		grid = gridIn;
+	}
+	public ImageIcon getIcon() {
+		return notUsed;
 	}
 	protected boolean diagonalMove(int x, int y) {
 		
@@ -240,4 +245,7 @@ public class Piece {
 		
 		//*/
 	}
+	
+	public abstract boolean isValidMove(int x, int y);
+	public abstract int getValue();
 }

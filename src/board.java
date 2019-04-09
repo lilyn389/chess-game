@@ -1,15 +1,19 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 public class board extends JFrame {
-
+	
+	private boolean isAI = true; // temp var to give AI moves
 	// define the board specifications
+	private AI ai;
 	private Container space;
-	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
+	JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
 	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
-	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
+	public Tile[][] grid = new Tile[8][8];  // keep track of the board state
 	// move helper variables
 	private String turn;
 	private Piece selected;
@@ -22,18 +26,21 @@ public class board extends JFrame {
 	private boolean select;
 	private int index;
 	// declare knights
-	private Knight[] knights = new Knight[4];
+	Knight[] knights = new Knight[4];
 	// declare rooks
-	private Rook[] rooks = new Rook[4];
+	Rook[] rooks = new Rook[4];
 	// declare bishops
-	private Bishop[] bishops = new Bishop[4];
+	Bishop[] bishops = new Bishop[4];
 	// declare Queens
-	private Queen[] queens = new Queen[2];
+	Queen[] queens = new Queen[2];
 	// declare Kings
-	private King[] kings = new King[2];
+	King[] kings = new King[2];
 	// declare black pawns
-	private Pawn[] pawns = new Pawn[16];
-	
+	Pawn[] pawns = new Pawn[16];
+	public Tile[][] getGrid()
+	{
+		return grid;
+	}
 	public board() {    // constructor
 		super("Chess Board");
 		
@@ -115,7 +122,8 @@ public class board extends JFrame {
 		grid[1][6] = new Tile(pawns[14], false);
 		pawns[15] = new Pawn("white", "pawn", 1, 7, 15);
 		grid[1][7] = new Tile(pawns[15], false);
-		
+		setAI(new AI(this));
+		//pawns,rooks,kings,queens,bishops,knights
 		index = 100;
 	//	selected = new Piece();
 		selectedKnight = new Knight();
@@ -245,11 +253,21 @@ public class board extends JFrame {
 	
 	private void processClick(int x, int y) {
 		// check if there is a piece selected. 
+		
 		if (select == false) {
 			index = processSelection(x, y);
 			return;
 		}
-		
+		if(isAI && turn == getAI().team)
+		{
+		//ai.getTurn(turn);
+		//ai.getXandY(x,y);
+		//ai.getSelected(select,selected);
+		//ai.updateBoard();
+		getAI().processMove();
+		}
+		else
+		{
 		// move a knight
 		if (selected.getColor() == turn & selected.getName() == "knight") {
 			selectedKnight.updateGrid(grid);
@@ -271,6 +289,7 @@ public class board extends JFrame {
 						turn = "white";
 					}
 				}
+				
 				return;
 			}
 		}
@@ -399,9 +418,10 @@ public class board extends JFrame {
 				}
 			}
 		}
-		select = false;  // reset 
+		}
+		select = false; 
+		// reset 
 	}
-	
 	// This function checks the location that the player is trying to move their piece to
 	private boolean checkMoveLocation(int x, int y) {
 		if (grid[x][y].isEmpty()) {  // if it is an empty tile, move there
@@ -419,6 +439,15 @@ public class board extends JFrame {
 	}
 	
 	
+	public AI getAI() {
+		return ai;
+	}
+
+	public void setAI(AI ai) {
+		this.ai = ai;
+	}
+
+
 	private class ButtonHandler implements ActionListener {
 		
 		public void actionPerformed(ActionEvent event) {
@@ -434,6 +463,20 @@ public class board extends JFrame {
 			}
 		}
 	}
+	
+	/*public ArrayList<Move> getMoves(String color) 
+	{
+		ArrayList<Move> moves = new ArrayList<Move>();
+		
+		for(int i = 0; i < 8; i++)
+			for(int j = 0; j < 8; j++) {
+				if(!b.tiles[i][j].isEmpty() && 
+						tiles[i][j].getPiece().getColor() == color) 
+				{
+					moves.addAll(grid[i][j].getPiece().getMoves(this, i, j));
+				}
+			}
+	}*/
 }
 	
 
