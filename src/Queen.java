@@ -33,5 +33,11 @@ public class Queen extends Piece {
 
 		return orthagonalMove(x, y) || diagonalMove(x, y);
 	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
