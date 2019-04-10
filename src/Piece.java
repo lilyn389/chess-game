@@ -75,6 +75,7 @@ public abstract class Piece {
 	public void setID(int iD) {
 		ID = iD;
 	}
+  
 	protected void updateGrid(Tile[][] gridIn) 
 	{
 		grid = gridIn;
@@ -82,6 +83,7 @@ public abstract class Piece {
 	public ImageIcon getIcon() {
 		return notUsed;
 	}
+
 	protected boolean diagonalMove(int x, int y) {
 		
 		int row_diff = Math.abs(x - this.getRow());
