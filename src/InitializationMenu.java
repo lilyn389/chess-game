@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 
 public class InitializationMenu implements ActionListener {
@@ -14,8 +16,9 @@ public class InitializationMenu implements ActionListener {
     JRadioButton level_1;
     JRadioButton level_2;
     JRadioButton level_3;
+    board chess_gui;
     
-    InitializationMenu(){
+    InitializationMenu() {
         cards = new JPanel(new CardLayout());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -79,6 +82,7 @@ public class InitializationMenu implements ActionListener {
         f.add(cards);
         f.setSize(800,800);
         f.setVisible(true);
+        f.setLocationRelativeTo(null);  // center in screen
     }
     
     @Override
@@ -90,7 +94,11 @@ public class InitializationMenu implements ActionListener {
         if (e.getSource() == player_1)
             cl.show(cards, "MyPanel2");
         if (e.getSource() == begin) {
-            board chess_gui = new board();
+			try {
+				chess_gui = new board();
+			} catch (InterruptedException | IOException e1) {
+				e1.printStackTrace();
+			}
             chess_gui.getKings()[0].setGrid(chess_gui.getGrid());
     		chess_gui.getKings()[1].setGrid(chess_gui.getGrid());
             f.dispose();
