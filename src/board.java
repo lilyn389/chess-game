@@ -816,4 +816,5 @@ public class board extends JFrame implements Runnable {
 	}
 
 }
+
 	
