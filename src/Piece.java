@@ -1,3 +1,5 @@
+import javax.swing.ImageIcon;
+
 public abstract class Piece {
 
 	protected String color;
@@ -89,169 +91,194 @@ public abstract class Piece {
 		grid = gridIn;
 	}
 	
-	public abstract boolean isValidMove(int x, int y);  // implemented in the specific piece classes
-	
-	protected boolean diagonalMove(int x, int y) {
-		
+	// abstract function defined in inherited clas
+	public abstract ImageIcon getIcon();
+
+	public abstract boolean isValidMove(int x, int y);
+
+	protected boolean diagonalMove(int x, int y)
+	{
+
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
-		
-		if (row_diff == 0) {
+
+		if (row_diff == 0)
+		{
 			System.out.println(row);
 			System.out.println(column);
 			System.out.println("error1");
 			return false;
 		}
-		
-		//System.out.println(row_diff);
-		//System.out.println(column_diff);
-		
-		if (row_diff == column_diff) {
-			
+
+		if (row_diff == column_diff)
+		{
+
 			int row = 0;
 			int col = 0;
-			
-			if (x < this.getRow() && y < this.getColumn()) {
-				
+
+			if (x < this.getRow() && y < this.getColumn())
+			{
+
 				row = this.getRow() - 1;
 				col = this.getColumn() - 1;
-				
-				for (int i = 0; i < row_diff - 1; i++) {
-					
+
+				for (int i = 0; i < row_diff - 1; i++)
+				{
+
 					// Checking for a clear path
-					
-					if (!grid[row][col].isEmpty()) {
 
-						return false;	//Path is not clear
+					if (!grid[row][col].isEmpty())
+					{
+
+						return false; // Path is not clear
 					}
-					
+
 					col--;
 					row--;
 				}
 			}
-			else if (x < this.getRow() && y > this.getColumn()) {
-				
+			else if (x < this.getRow() && y > this.getColumn())
+			{
+
 				row = this.getRow() - 1;
 				col = this.getColumn() + 1;
-				
-				for (int i = 0; i < row_diff - 1; i++) {
-					
-					if (!grid[row][col].isEmpty()) {
+
+				for (int i = 0; i < row_diff - 1; i++)
+				{
+
+					if (!grid[row][col].isEmpty())
+					{
 
 						return false;
 					}
-					
+
 					col++;
 					row--;
 				}
 			}
-			else if (x > this.getRow() && y < this.getColumn()) {
-				
+			else if (x > this.getRow() && y < this.getColumn())
+			{
+
 				row = this.getRow() + 1;
 				col = this.getColumn() - 1;
-				
-				for (int i = 0; i < row_diff - 1; i++) {
-					
-					if (!grid[row][col].isEmpty()) {
+
+				for (int i = 0; i < row_diff - 1; i++)
+				{
+
+					if (!grid[row][col].isEmpty())
+					{
 
 						return false;
 					}
-					
+
 					col--;
 					row++;
 				}
 			}
-			else if (x > this.getRow() && y > this.getColumn()) {
-				
+			else if (x > this.getRow() && y > this.getColumn())
+			{
+
 				row = this.getRow() + 1;
 				col = this.getColumn() + 1;
-				
-				for (int i = 0; i < row_diff - 1; i++) {
 
-					if (!grid[row][col].isEmpty()) {
+				for (int i = 0; i < row_diff - 1; i++)
+				{
+
+					if (!grid[row][col].isEmpty())
+					{
 
 						return false;
 					}
-					
+
 					col++;
 					row++;
 				}
 			}
-			
+
 			// Path is clear
 			return true;
 		}
-		else {
-			
+		else
+		{
+
 			System.out.println("error2");
 			return false;
 		}
 	}
-	
-	protected boolean orthagonalMove(int x, int y) {
-		
+
+	protected boolean orthagonalMove(int x, int y)
+	{
+
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
-		///*
+		/// *
 		// Checking path
 		int minIndex;
 		int maxIndex;
-		
-		if (row_diff == 0) {
-		
-			if (y < this.getColumn()) {
-				
+
+		if (row_diff == 0)
+		{
+
+			if (y < this.getColumn())
+			{
+
 				minIndex = y + 1;
 				maxIndex = this.getColumn();
 			}
-			else {
-				
+			else
+			{
+
 				minIndex = this.getColumn() + 1;
 				maxIndex = y;
 			}
-			
-			//Searching for obstructions
-			for (int i = minIndex; i < maxIndex; i++) {
-				
-				if (!grid[x][i].isEmpty()) {
-					
+
+			// Searching for obstructions
+			for (int i = minIndex; i < maxIndex; i++)
+			{
+
+				if (!grid[x][i].isEmpty())
+				{
+
 					return false;
 				}
 			}
-			
-			//No obstruction found
+
+			// No obstruction found
 			return true;
 		}
-		else if (column_diff == 0) {
-			
-			if (x < this.getRow()) {
-				
+		else if (column_diff == 0)
+		{
+
+			if (x < this.getRow())
+			{
+
 				minIndex = x + 1;
 				maxIndex = this.getRow();
 			}
-			else {
-				
+			else
+			{
+
 				minIndex = this.getRow() + 1;
 				maxIndex = x;
-			}		
-			
-			//Searching for obstructions
-			for (int i = minIndex; i < maxIndex; i++) {
-				
-				if (!grid[i][y].isEmpty()) {
-					
+			}
+
+			// Searching for obstructions
+			for (int i = minIndex; i < maxIndex; i++)
+			{
+
+				if (!grid[i][y].isEmpty())
+				{
+
 					return false;
 				}
 			}
-			
-			//No obstruction found
+
+			// No obstruction found
 			return true;
 		}
-		else {
-		
+		else
+		{
 			return false;
 		}
-		
-		//*/
 	}
 }

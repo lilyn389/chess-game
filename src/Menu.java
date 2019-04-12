@@ -16,6 +16,7 @@ public class Menu extends JFrame{
         frame.setLayout(null);
         frame.setSize(800,800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);  // center in the screen
         
         //background image
         ImageIcon bg_img = new ImageIcon("gradient.png");
