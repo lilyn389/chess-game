@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.Vector;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -20,7 +22,7 @@ public class board extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	// AI declarations 
-	private AI ai;
+	private AI ai;;
 	private boolean isAI = false; // ***FIXME**** temp var to give AI moves
 	private String AIColor;
 	private String AI_difficulty;
@@ -43,6 +45,7 @@ public class board extends JFrame implements Runnable {
 	private String server_msg;
 	private boolean network_play = false;
 	private String my_color;	
+	private String IP;
 	
 	// move helper variables
 	private String turn = "white";
@@ -74,7 +77,7 @@ public class board extends JFrame implements Runnable {
     
 	/* Default Constructor, this constructor sets up the board,
 	 * places all pieces, and connects to the server. */
-	public board(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty) throws InterruptedException, IOException {    
+	public board(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty, String _IP) throws InterruptedException, IOException {    
 		
 		// initialize game configuration set by user in the menu
 		AI_AI = _AI_AI;  // true if in 'computer vs. computer' mode.
@@ -83,6 +86,9 @@ public class board extends JFrame implements Runnable {
 		network_play = _network_play; // currently always true, meaning that we will always connect to the network
 		AIColor = _AIColor; // determines color of AI
 		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
+		
+		// IP address for network_play
+		IP = _IP;
 		
 		// initialize the AI
 		if (AI_play) // ***NOTE for Joshua**** if the mode is AI_AI (computer vs. computer), the color will be set by the server in the connect server function (currently working on this)
@@ -366,10 +372,10 @@ public class board extends JFrame implements Runnable {
 	
   
 	/* This function connects to the server and to the other player */
-	private boolean connectToServer() throws InterruptedException, IOException
+	private boolean connectToServer(String IP) throws InterruptedException, IOException
 	{
 		// connect to server
-		s = new Socket("localhost", 9998);
+		s = new Socket(IP, 9998);
 
 		// connect output stream and send message to server
 		pr = new PrintWriter(s.getOutputStream());
@@ -379,19 +385,27 @@ public class board extends JFrame implements Runnable {
 		// connect input stream and wait for message from server
 		in = new InputStreamReader(s.getInputStream());
 		bf = new BufferedReader(in);
+		// wait for welcome message from server
 		server_msg = bf.readLine();
-
-		
 		System.out.println("server : " + server_msg);
 		
-		// receive color from server, this will be your color (first player to connect is white)
-		if (server_msg.equals("white") || server_msg.equals("black")) 
+		// wait for info message from server
+		server_msg = bf.readLine();
+		
+		Scanner scan = new Scanner(server_msg);
+		String command = scan.next();
+		String time = scan.next();
+		my_color = scan.next();
+		
+		if (command.equals("INFO") && (my_color.equals("white") || my_color.equals("black")) )
 		{
-			my_color = server_msg;
+			// send ready message to server
+			pr.println("READY");
+			pr.flush();
 		}
 		else 
-		{	
-			System.out.println("Invalid color message recieved from server.");
+		{
+			System.out.println("Error: bad welcome message from server");
 			return false;
 		}
 		
@@ -405,13 +419,19 @@ public class board extends JFrame implements Runnable {
 			if(server_msg.equals("ready")) 
 			{	
 				System.out.println("Player 2 connected");
-				JOptionPane.showMessageDialog(space, "Player 2 connected");
+				JOptionPane.showMessageDialog(space, "Player 2 connected, you move first");
 			}	
 		}
 		
 		else 
 		{
-			JOptionPane.showMessageDialog(space, "You are black, player 1 is connected");
+			server_msg = bf.readLine();
+
+			if(server_msg.equals("ready")) 
+			{	
+				System.out.println("Player 1 connected");
+				JOptionPane.showMessageDialog(space, "You are black, player 1 is connected, you move second");
+			}				
 		}
 		
 		return true;
@@ -818,7 +838,7 @@ public class board extends JFrame implements Runnable {
 	{
 		try
 		{
-			if(connectToServer()) System.out.println("Succesfully connected to server and other player");
+			if(connectToServer(IP)) System.out.println("Succesfully connected to server and other player");
 		} catch (InterruptedException | IOException e)
 		{
 			e.printStackTrace();
