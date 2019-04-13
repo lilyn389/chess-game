@@ -6,8 +6,8 @@ public class Pawn extends Piece {
 	
 	private boolean firstMove = true;
 	
-	public Pawn(String color, String name, int row, int column, int ID, boolean alive) {
-		super(color, name, row, column, ID, alive);
+	public Pawn(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
+		super(gridIn, color, name, row, column, ID, alive);
 		if (color == "white") {
 			pawn = new ImageIcon("white_pawn.png");
 		}
@@ -20,7 +20,7 @@ public class Pawn extends Piece {
 		return pawn;
 	}
 
-	public void setRookIcon(ImageIcon pawn) {
+	public void setIcon(ImageIcon pawn) {
 		this.pawn = pawn;
 	}
 	
@@ -126,4 +126,5 @@ public class Pawn extends Piece {
 			return false;
 		}
 	}
+
 }

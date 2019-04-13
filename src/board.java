@@ -22,6 +22,9 @@ public class board extends JFrame implements Runnable {
 	// AI declarations 
 	private AI ai = new AI();
 	private boolean isAI = false; // temp var to give AI moves
+	private String AIColor;
+	private boolean AI_play;
+	private boolean AI_AI;
 	
 	// define the board specifications
 	JFrame space = new JFrame("Chess");
@@ -37,7 +40,7 @@ public class board extends JFrame implements Runnable {
 	private InputStreamReader in;
 	private BufferedReader bf;
 	private String server_msg;
-	private boolean network_play = true;
+	private boolean network_play = false;
 	private String my_color;	
 	
 	// move helper variables
@@ -70,7 +73,9 @@ public class board extends JFrame implements Runnable {
     
 	/* Default Constructor, this constructor sets up the board,
 	 * places all pieces, and connects to the server. */
-	public board() throws InterruptedException, IOException {    
+	public board(/*String AIC*/) throws InterruptedException, IOException {    
+		
+		//AIColor = AIC;
 		
 		// initialize menu bar
         menuBar = new JMenuBar();
@@ -141,79 +146,79 @@ public class board extends JFrame implements Runnable {
 		
 		// Initialize all pieces and place them on the grid
 		// Knights
-		knights[0] = new Knight("white", "knight", 0, 1, 0, true);
+		knights[0] = new Knight(grid, "white", "knight", 0, 1, 0, true);
 		grid[0][1] = new Tile(knights[0], false);  // set them on the tile
-		knights[1] = new Knight("white", "knight", 0, 6, 1, true);
+		knights[1] = new Knight(grid, "white", "knight", 0, 6, 1, true);
 		grid[0][6] = new Tile(knights[1], false);
 		white_pieces.addElement(knights[0]);   // add them to the vector
 		white_pieces.addElement(knights[1]);
-		knights[2] = new Knight("black", "knight", 7, 1, 2, true);
+		knights[2] = new Knight(grid, "black", "knight", 7, 1, 2, true);
 		grid[7][1] = new Tile(knights[2], false);
-		knights[3] = new Knight("black", "knight", 7, 6, 3, true);
+		knights[3] = new Knight(grid, "black", "knight", 7, 6, 3, true);
 		grid[7][6] = new Tile(knights[3], false);
 		black_pieces.addElement(knights[2]);
 		black_pieces.addElement(knights[3]);
 		
 		// Rooks
-		rooks[0] = new Rook("white", "rook", 0, 0, 0, true);
+		rooks[0] = new Rook(grid, "white", "rook", 0, 0, 0, true);
 		grid[0][0] = new Tile(rooks[0], false);
-		rooks[1] = new Rook("white", "rook", 0, 7, 1, true);
+		rooks[1] = new Rook(grid, "white", "rook", 0, 7, 1, true);
 		grid[0][7] = new Tile(rooks[1], false);
 		white_pieces.addElement(rooks[0]);
 		white_pieces.addElement(rooks[1]);
-		rooks[2] = new Rook("black", "rook", 7, 0, 2, true);
+		rooks[2] = new Rook(grid, "black", "rook", 7, 0, 2, true);
 		grid[7][0] = new Tile(rooks[2], false);
-		rooks[3] = new Rook("black", "rook", 7, 7, 3, true);
+		rooks[3] = new Rook(grid, "black", "rook", 7, 7, 3, true);
 		grid[7][7] = new Tile(rooks[3], false);
 		black_pieces.addElement(rooks[2]);
 		black_pieces.addElement(rooks[3]);
 		
 		// Bishops
-		bishops[0] = new Bishop("white", "bishop", 0, 2, 0, true);
+		bishops[0] = new Bishop(grid, "white", "bishop", 0, 2, 0, true);
 		grid[0][2] = new Tile(bishops[0], false);
-		bishops[1] = new Bishop("white", "bishop", 0, 5, 1, true);
-		grid[0][5] = new Tile(rooks[1], false);
+		bishops[1] = new Bishop(grid, "white", "bishop", 0, 5, 1, true);
+		grid[0][5] = new Tile(bishops[1], false);
 		white_pieces.addElement(bishops[0]);
 		white_pieces.addElement(bishops[1]);
-		bishops[2] = new Bishop("black", "bishop", 7, 2, 2, true);
-		grid[7][2] = new Tile(rooks[2], false);
-		bishops[3] = new Bishop("black", "bishop", 7, 5, 3, true);
-		grid[7][5] = new Tile(rooks[3], false);
+		bishops[2] = new Bishop(grid, "black", "bishop", 7, 2, 2, true);
+		grid[7][2] = new Tile(bishops[2], false);
+		bishops[3] = new Bishop(grid, "black", "bishop", 7, 5, 3, true);
+		grid[7][5] = new Tile(bishops[3], false);
 		black_pieces.addElement(bishops[2]);
 		black_pieces.addElement(bishops[3]);
 
 		// Kings
-		kings[0] = new King("white", "king", 0, 3, 0, true);
+		kings[0] = new King(grid, "white", "king", 0, 3, 0, true);
 		grid[0][3] = new Tile(kings[0], false);
 		white_pieces.addElement(kings[0]);
-		kings[1] = new King("black", "king", 7, 3, 1, true);
+		kings[1] = new King(grid, "black", "king", 7, 3, 1, true);
 		grid[7][3] = new Tile(kings[1], false);
 		black_pieces.addElement(kings[1]);
 		
 		// Queens
-		queens[0] = new Queen("white", "queen", 0, 4, 0, true);
+		queens[0] = new Queen(grid, "white", "queen", 0, 4, 0, true);
 		grid[0][4] = new Tile(queens[0], false);
 		white_pieces.addElement(queens[0]);
-		queens[1] = new Queen("black", "queen", 7, 4, 1, true);
+		queens[1] = new Queen(grid, "black", "queen", 7, 4, 1, true);
 		grid[7][4] = new Tile(queens[1], false);
 		black_pieces.addElement(queens[1]);
 		
 		// Black pawns
-		pawns[0] = new Pawn("black", "pawn", 6, 0, 0, true);
+		pawns[0] = new Pawn(grid, "black", "pawn", 6, 0, 0, true);
 		grid[6][0] = new Tile(pawns[0], false);
-		pawns[1] = new Pawn("black", "pawn", 6, 1, 1, true);
+		pawns[1] = new Pawn(grid, "black", "pawn", 6, 1, 1, true);
 		grid[6][1] = new Tile(pawns[1], false);
-		pawns[2] = new Pawn("black", "pawn", 6, 2, 2, true);
+		pawns[2] = new Pawn(grid, "black", "pawn", 6, 2, 2, true);
 		grid[6][2] = new Tile(pawns[2], false);
-		pawns[3] = new Pawn("black", "pawn", 6, 3, 3, true);
+		pawns[3] = new Pawn(grid, "black", "pawn", 6, 3, 3, true);
 		grid[6][3] = new Tile(pawns[3], false);
-		pawns[4] = new Pawn("black", "pawn", 6, 4, 4, true);
+		pawns[4] = new Pawn(grid, "black", "pawn", 6, 4, 4, true);
 		grid[6][4] = new Tile(pawns[4], false);
-		pawns[5] = new Pawn("black", "pawn", 6, 5, 5, true);
+		pawns[5] = new Pawn(grid, "black", "pawn", 6, 5, 5, true);
 		grid[6][5] = new Tile(pawns[5], false);
-		pawns[6] = new Pawn("black", "pawn", 6, 6, 6, true);
+		pawns[6] = new Pawn(grid, "black", "pawn", 6, 6, 6, true);
 		grid[6][6] = new Tile(pawns[6], false);
-		pawns[7] = new Pawn("black", "pawn", 6, 7, 7, true);
+		pawns[7] = new Pawn(grid, "black", "pawn", 6, 7, 7, true);
 		grid[6][7] = new Tile(pawns[7], false);
 		black_pieces.addElement(pawns[0]);
 		black_pieces.addElement(pawns[1]);
@@ -225,21 +230,21 @@ public class board extends JFrame implements Runnable {
 		black_pieces.addElement(pawns[7]);
 		
 		// White pawns
-		pawns[8] = new Pawn("white", "pawn", 1, 0, 8, true);
+		pawns[8] = new Pawn(grid, "white", "pawn", 1, 0, 8, true);
 		grid[1][0] = new Tile(pawns[8], false);
-		pawns[9] = new Pawn("white", "pawn", 1, 1, 9, true);
+		pawns[9] = new Pawn(grid, "white", "pawn", 1, 1, 9, true);
 		grid[1][1] = new Tile(pawns[9], false);
-		pawns[10] = new Pawn("white", "pawn", 1, 2, 10, true);
+		pawns[10] = new Pawn(grid, "white", "pawn", 1, 2, 10, true);
 		grid[1][2] = new Tile(pawns[10], false);
-		pawns[11] = new Pawn("white", "pawn", 1, 3, 11, true);
+		pawns[11] = new Pawn(grid, "white", "pawn", 1, 3, 11, true);
 		grid[1][3] = new Tile(pawns[11], false);
-		pawns[12] = new Pawn("white", "pawn", 1, 4, 12, true);
+		pawns[12] = new Pawn(grid, "white", "pawn", 1, 4, 12, true);
 		grid[1][4] = new Tile(pawns[12], false);
-		pawns[13] = new Pawn("white", "pawn", 1, 5, 13, true);
+		pawns[13] = new Pawn(grid, "white", "pawn", 1, 5, 13, true);
 		grid[1][5] = new Tile(pawns[13], false);
-		pawns[14] = new Pawn("white", "pawn", 1, 6, 14, true);
+		pawns[14] = new Pawn(grid, "white", "pawn", 1, 6, 14, true);
 		grid[1][6] = new Tile(pawns[14], false);
-		pawns[15] = new Pawn("white", "pawn", 1, 7, 15, true);
+		pawns[15] = new Pawn(grid, "white", "pawn", 1, 7, 15, true);
 		grid[1][7] = new Tile(pawns[15], false);
 		white_pieces.addElement(pawns[8]);
 		white_pieces.addElement(pawns[9]);
@@ -256,6 +261,8 @@ public class board extends JFrame implements Runnable {
 		kings[0].setEnemyPieces(black_pieces);
 		kings[1].setPieces(black_pieces);
 		kings[1].setEnemyPieces(white_pieces);
+		kings[0].setGrid(grid);
+		kings[1].setGrid(grid);
 
 		
 		//space = getContentPane();
@@ -339,20 +346,11 @@ public class board extends JFrame implements Runnable {
 		// Connect to the server
 		if (network_play)
 		{
-			if(connectToServer()) System.out.println("Succesfully connected to server and other player");
-			
-			if (my_color.equals("black"))
-			{
-				// wait for white to move first
-				boolean first_move = getMove(); 
-				if (first_move)
-				{
-					System.out.println("White moved");
-				}
-			}
+			thread = new Thread(this, "board");
+			thread.start();
 		}
-
 	}
+	
   
 	/* This function connects to the server and to the other player */
 	private boolean connectToServer() throws InterruptedException, IOException
@@ -452,7 +450,6 @@ public class board extends JFrame implements Runnable {
 		}
 		else return -1;
 	}
-
 	
 	/* This function checks the location that the player is trying to move their piece to
 	 * it returns true if the location is either empty, or an enemy */
@@ -466,10 +463,33 @@ public class board extends JFrame implements Runnable {
 		{
 			return false;
 		}
-		else if (selected.isValidMove(x, y))
+		else if (selected.isValidMove(x, y) && selected.getColor().equals(turn))
 		{
 			grid[x][y].getPiece().setIsAlive(false); // kill piece
 			grid[x][y].setEmpty(true); // empty space
+			
+			// remove piece from the vector of pieces
+			if (grid[x][y].getPiece().getColor().equals("white"))
+			{
+				for (int i = 0; i < white_pieces.size(); i++)
+				{
+					if (white_pieces.get(i).getName() == grid[x][y].getPiece().getName() && white_pieces.get(i).getID() == grid[x][y].getPiece().getID())
+					{
+						white_pieces.remove(i);
+					}
+				}
+			}
+			else 
+			{
+				for (int i = 0; i < black_pieces.size(); i++)
+				{
+					if (black_pieces.get(i).getName() == grid[x][y].getPiece().getName() && black_pieces.get(i).getID() == grid[x][y].getPiece().getID())
+					{
+						black_pieces.remove(i);
+					}
+				}
+			}
+			
 			return true;
 		}
 		else return false;
@@ -498,15 +518,26 @@ public class board extends JFrame implements Runnable {
 			grid[x][y].setPiece(selected);
 			grid[x][y].setEmpty(false);
 			moved = true;
-
 			// Pawn promotion
 			if (selected.getName().equals("pawn") && (x == 0 || x == 7))
 			{
-				queens[numOfQueens] = new Queen(selected.getColor(), selected.getName(), x, y, numOfQueens, true);
-				grid[x][y].setPiece(queens[numOfQueens]);
+				queens[numOfQueens] = new Queen(grid, selected.getColor(), "queen", x, y, numOfQueens, true);
+				tiles[x][y].setIcon(null);
 				tiles[x][y].setIcon(queens[numOfQueens].getIcon());
-
+				grid[x][y].getPiece().setIsAlive(false);
+				grid[x][y].setPiece(queens[numOfQueens]);
+				
 				numOfQueens++;
+				
+				// add to vector of pieces
+				if (selected.getColor().equals("white"))
+				{
+					white_pieces.addElement(queens[numOfQueens - 1]);
+				}
+				else 
+				{
+					black_pieces.addElement(queens[numOfQueens - 1]);
+				}
 			}
 		} 
 	        	
@@ -548,7 +579,7 @@ public class board extends JFrame implements Runnable {
 			else turn = "white";
 			
 			// if playing over network, send move to server
-			if (network_play && turn != my_color)
+			if (network_play && !turn.equals(my_color))
 			{
 				sendMove(x, y);
 			}
@@ -643,8 +674,6 @@ public class board extends JFrame implements Runnable {
 		pr.println(move_msg);
 		pr.flush();
 
-		// wait for move from other player
-		getMove();
 	}
 	
 	private boolean getMove() 
@@ -771,11 +800,30 @@ public class board extends JFrame implements Runnable {
 		}
 	}
 
-
 	@Override
-	public void run() {
-		// TODO Auto-generated method stub
+	public void run() 
+	{
+		try
+		{
+			if(connectToServer()) System.out.println("Succesfully connected to server and other player");
+		} catch (InterruptedException | IOException e)
+		{
+			e.printStackTrace();
+		}
 		
+		if (my_color.equals("black"))
+		{
+			// wait for white to move first
+			boolean first_move = getMove(); 
+			if (first_move)
+			{
+				System.out.println("White moved");
+			}
+		}
+		while (true) 
+		{
+			getMove();
+		}
 	}
 	
 	public Vector<Piece> getWhitePieces() {
@@ -816,5 +864,4 @@ public class board extends JFrame implements Runnable {
 	}
 
 }
-
 	

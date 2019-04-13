@@ -17,6 +17,10 @@ public class InitializationMenu implements ActionListener {
     JRadioButton level_2;
     JRadioButton level_3;
     board chess_gui;
+    String AIColor = "";
+    boolean network_play;
+    boolean AI_play;
+    boolean AI_AI;
     
     InitializationMenu() {
         cards = new JPanel(new CardLayout());
@@ -89,6 +93,17 @@ public class InitializationMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout)(cards.getLayout());
         if (e.getSource() == color_1 || e.getSource() == color_2 || e.getSource() == color_3) {
+        	if (e.getSource() == color_1)
+        	{
+        		AIColor = "white";
+        		cl.show(cards, "MyPanel1");
+        	}
+        	else if (e.getSource() == color_2) 
+        	{
+        		AIColor = "black";
+        		cl.show(cards, "MyPanel1");
+        	}
+        	else 
             cl.show(cards, "MyPanel1");
         }
         if (e.getSource() == player_1)

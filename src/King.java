@@ -11,8 +11,8 @@ public class King extends Piece {
 	
 	private boolean firstMove = true;
 	
-	public King(String color, String name, int row, int column, int ID, boolean alive) {
-		super(color, name, row, column, ID, alive);
+	public King(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
+		super(gridIn, color, name, row, column, ID, alive);
 		if (color == "white") {
 			king = new ImageIcon("white_king.png");
 		}
@@ -41,7 +41,7 @@ public class King extends Piece {
 		return king;
 	}
 
-	public void setRookIcon(ImageIcon king) {
+	public void setIcon(ImageIcon king) {
 		this.king = king;
 	}
 	
@@ -135,13 +135,13 @@ public class King extends Piece {
 		King temp_king;
 		// make a phantom king to move around and check if there is any way to escape being killed by the enemy 
 		if (color == "white") {
-			temp_king = new King("white", "king", row, column, 0, true);
+			temp_king = new King(grid, "white", "king", row, column, 0, true);
 			temp_king.setGrid(grid);
 			temp_king.setPieces(pieces);
 			temp_king.setEnemyPieces(enemy_pieces);
 		}
 		else {
-			temp_king = new King("black", "king", row, column, 0, true);
+			temp_king = new King(grid, "black", "king", row, column, 0, true);
 			temp_king.setGrid(grid);
 			temp_king.setPieces(pieces);
 			temp_king.setEnemyPieces(enemy_pieces);
