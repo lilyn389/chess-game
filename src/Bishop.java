@@ -4,8 +4,8 @@ public class Bishop extends Piece {
 	
 	private ImageIcon bishop;
 	
-	public Bishop(String color, String name, int row, int column, int ID, boolean alive) {
-		super(color, name, row, column, ID, alive);
+	public Bishop(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
+		super(gridIn, color, name, row, column, ID, alive);
 		if (color == "white") {
 			bishop = new ImageIcon("white_bishop.png");
 		}
@@ -18,7 +18,7 @@ public class Bishop extends Piece {
 		return bishop;
 	}
 
-	public void setRookIcon(ImageIcon bishop) {
+	public void setIcon(ImageIcon bishop) {
 		this.bishop = bishop;
 	}
 	

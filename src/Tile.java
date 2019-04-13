@@ -6,6 +6,7 @@ public class Tile {
 	
 	public Tile() {
 		empty = true;
+		piece = null;
 	}
 	
 	public Tile(Piece piece, boolean empty) {

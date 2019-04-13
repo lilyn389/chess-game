@@ -4,8 +4,8 @@ public class Queen extends Piece {
 	
 	private ImageIcon queen;
 	
-	public Queen(String color, String name, int row, int column, int ID, boolean alive) {
-		super(color, name, row, column, ID, alive);
+	public Queen(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
+		super(gridIn, color, name, row, column, ID, alive);
 		if (color == "white") {
 			queen = new ImageIcon("white_queen.png");
 		}
@@ -18,7 +18,7 @@ public class Queen extends Piece {
 		return queen;
 	}
 
-	public void setRookIcon(ImageIcon queen) {
+	public void setIcon(ImageIcon queen) {
 		this.queen = queen;
 	}
 	

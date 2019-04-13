@@ -17,13 +17,14 @@ public abstract class Piece {
 		column = 100;
 	}
 	
-	public Piece(String color, String name, int row, int column, int ID, boolean alive) {
+	public Piece(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		this.color = color;
 		this.name = name;
 		this.row = row;
 		this.column = column;
 		this.ID = ID;
 		is_alive = alive;
+		grid = gridIn;
 	}
 	
 	public int getRow() {
@@ -93,6 +94,8 @@ public abstract class Piece {
 	
 	// abstract function defined in inherited clas
 	public abstract ImageIcon getIcon();
+	
+	public abstract void setIcon(ImageIcon icon);
 
 	public abstract boolean isValidMove(int x, int y);
 
@@ -208,7 +211,6 @@ public abstract class Piece {
 
 	protected boolean orthagonalMove(int x, int y)
 	{
-
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
 		/// *
@@ -221,13 +223,11 @@ public abstract class Piece {
 
 			if (y < this.getColumn())
 			{
-
 				minIndex = y + 1;
 				maxIndex = this.getColumn();
 			}
 			else
 			{
-
 				minIndex = this.getColumn() + 1;
 				maxIndex = y;
 			}
@@ -235,14 +235,20 @@ public abstract class Piece {
 			// Searching for obstructions
 			for (int i = minIndex; i < maxIndex; i++)
 			{
-
 				if (!grid[x][i].isEmpty())
 				{
-
 					return false;
 				}
 			}
 
+			if (!grid[x][y].isEmpty())
+			{
+				if (grid[x][y].getPiece().getColor() == this.color)
+				{
+					return false;
+				}
+			}
+			
 			// No obstruction found
 			return true;
 		}
@@ -269,6 +275,14 @@ public abstract class Piece {
 				if (!grid[i][y].isEmpty())
 				{
 
+					return false;
+				}
+			}
+			
+			if (!grid[x][y].isEmpty())
+			{
+				if (grid[x][y].getPiece().getColor() == this.color)
+				{
 					return false;
 				}
 			}

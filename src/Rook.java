@@ -5,8 +5,8 @@ public class Rook extends Piece {
 	private ImageIcon rook;
 
 	
-	public Rook(String color, String name, int row, int column, int ID, boolean alive) {
-		super(color, name, row, column, ID, alive);
+	public Rook(Tile[][] grid, String color, String name, int row, int column, int ID, boolean alive) {
+		super(grid, color, name, row, column, ID, alive);
 		if (color == "white") {
 			rook = new ImageIcon("white_castle.png");
 		}
