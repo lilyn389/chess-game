@@ -20,9 +20,10 @@ public class board extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	// AI declarations 
-	private AI ai = new AI();
-	private boolean isAI = false; // temp var to give AI moves
+	private AI ai;
+	private boolean isAI = false; // ***FIXME**** temp var to give AI moves
 	private String AIColor;
+	private String AI_difficulty;
 	private boolean AI_play;
 	private boolean AI_AI;
 	
@@ -73,9 +74,21 @@ public class board extends JFrame implements Runnable {
     
 	/* Default Constructor, this constructor sets up the board,
 	 * places all pieces, and connects to the server. */
-	public board(/*String AIC*/) throws InterruptedException, IOException {    
+	public board(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty) throws InterruptedException, IOException {    
 		
-		//AIColor = AIC;
+		// initialize game configuration set by user in the menu
+		AI_AI = _AI_AI;  // true if in 'computer vs. computer' mode.
+		AI_play = _AI_play; // true if in 'human vs computer' mode.
+		// **NOTE for Joshua** comment this (network_play) out if you dont want to connect to the network. 
+		network_play = _network_play; // currently always true, meaning that we will always connect to the network
+		AIColor = _AIColor; // determines color of AI
+		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
+		
+		// initialize the AI
+		if (AI_play | AI_AI)
+		{
+			ai = new AI(AIColor);// **Note for Joshua** update to ai = new AI(AIColor, AI_difficulty); when difficulty levels are established as a parameter to the AI constructor
+		}
 		
 		// initialize menu bar
         menuBar = new JMenuBar();
