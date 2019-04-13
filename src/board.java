@@ -85,7 +85,7 @@ public class board extends JFrame implements Runnable {
 		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
 		
 		// initialize the AI
-		if (AI_play | AI_AI)
+		if (AI_play) // ***NOTE for Joshua**** if the mode is AI_AI (computer vs. computer), the color will be set by the server in the connect server function (currently working on this)
 		{
 			ai = new AI(AIColor);// **Note for Joshua** update to ai = new AI(AIColor, AI_difficulty); when difficulty levels are established as a parameter to the AI constructor
 		}
