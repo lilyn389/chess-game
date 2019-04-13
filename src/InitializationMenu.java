@@ -16,12 +16,15 @@ public class InitializationMenu implements ActionListener {
     JRadioButton level_1;
     JRadioButton level_2;
     JRadioButton level_3;
+    JRadioButton get_ip;
     board chess_gui;
     String AIColor;
     String AI_difficulty;
+    String IP;
     boolean network_play;
     boolean AI_play;
     boolean AI_AI;
+
     
     InitializationMenu() {
     	
@@ -31,6 +34,7 @@ public class InitializationMenu implements ActionListener {
     	network_play = false;
     	AI_play = false;
     	AI_AI = false;
+    	IP = "localhost";
     	
         cards = new JPanel(new CardLayout());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,17 +112,20 @@ public class InitializationMenu implements ActionListener {
 		{
 			AI_AI = true;
 			network_play = true;
+			IP = JOptionPane.showInputDialog("Enter IP Address");
 			cl.show(cards, "MyPanel2");
 		}
 		if (e.getSource() == player_2) // player_2 = Play computer
 		{
 			AI_play = true;
 			network_play = true;
+			IP = JOptionPane.showInputDialog("Enter IP Address");
 			cl.show(cards, "MyPanel0");
 		}
 		if (e.getSource() == player_3) // player_3 = Play human
 		{
 			network_play = true;
+			IP = JOptionPane.showInputDialog("Enter IP Address");
 			cl.show(cards, "MyPanel2");
 		}
 		
@@ -167,7 +174,7 @@ public class InitializationMenu implements ActionListener {
 		{
 			try
 			{
-				chess_gui = new board(AI_AI, AI_play, network_play, AIColor, AI_difficulty);
+				chess_gui = new board(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP);
 			} catch (InterruptedException | IOException e1)
 			{
 				e1.printStackTrace();
