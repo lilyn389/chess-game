@@ -500,7 +500,7 @@ public class board extends JFrame implements Runnable {
 			moved = true;
 
 			// Pawn promotion
-			if (selected.getName().equals("pawn") && (y == 0 || y == 7))
+			if (selected.getName().equals("pawn") && (x == 0 || x == 7))
 			{
 				queens[numOfQueens] = new Queen(selected.getColor(), selected.getName(), x, y, numOfQueens, true);
 				grid[x][y].setPiece(queens[numOfQueens]);
