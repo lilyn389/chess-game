@@ -1,6 +1,6 @@
 import javax.swing.ImageIcon;
 
-public class Queen extends Piece {
+public class Queen extends Piece implements Cloneable{
 	
 	private ImageIcon queen;
 	
@@ -13,7 +13,23 @@ public class Queen extends Piece {
 			queen = new ImageIcon("black_queen.png");
 		}
 	}
-
+	public Queen(Queen in)
+	{
+		super(in);
+		if (color == "white") {
+			queen = new ImageIcon("white_queen.png");
+		}
+		else {
+			queen = new ImageIcon("black_queen.png");
+		}
+	}
+	public Object clone() {
+	    try {
+	        return (Queen) super.clone();
+	    } catch (CloneNotSupportedException e) {
+	        return new Queen(this.grid, this.color,this.name,this.row,this.column,this.ID,this.is_alive);
+	    }
+	}
 	public ImageIcon getIcon() {
 		return queen;
 	}
@@ -24,18 +40,38 @@ public class Queen extends Piece {
 	
 	public boolean isValidMove(int x, int y) {
 		
-		if (row == x && y == column) {
-			return false;
-		}
+		if(x >= 0 && x <= 7 && y >= 0 && y <= 7)
+		{
+			if (row == x && y == column) {
+				return false;
+			}
 	
 		//Check for path obstructions
 		
-		return validQueenMove(x, y);
+			if(validQueenMove(x, y))
+			{
+				if(!grid[x][y].isEmpty())
+				{
+					if(grid[x][y].getPiece().color == color)
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	private boolean validQueenMove(int x, int y) {
 
 		return orthagonalMove(x, y) || diagonalMove(x, y);
 	}
-	
+	public int getValue()
+	{
+		return 90;
+	}
 }

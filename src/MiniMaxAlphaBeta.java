@@ -5,6 +5,8 @@ public class MiniMaxAlphaBeta {
 	board b;
 	String color;
 	int maxDepth;
+	//float alpha;
+	//float beta;
 	MiniMaxAlphaBeta(board bin,String teamIn,int maxDepthIn)
 	{
 		b = bin;
@@ -75,29 +77,57 @@ public class MiniMaxAlphaBeta {
 		if(maxDepth > 0)
 		{
 		Tile[][] gridC = b.grid.clone();
+		//alpha = Float.NEGATIVE_INFINITY;
+		//beta = Float.POSITIVE_INFINITY;
 		float alpha = Float.NEGATIVE_INFINITY;
 		float beta = Float.POSITIVE_INFINITY;
+		Vector<Float> teamScores = new Vector<Float>();
 		ArrayList<Move> potentialMoves = getAllMoves(b.getAI().getTeam(),gridC);
 		int depth = 1;
-		float[] teamScores = new float[potentialMoves.size()];
+		//float[] teamScores = new float[potentialMoves.size()];
 		for(int i = 0; i<potentialMoves.size();++i)
 		{
-			Tile[][] gridCnew = b.grid.clone();
+			Tile[][] gridCnew = new Tile[8][8];
+			for(int j = 0;j<8;++j)
+			{
+				for(int k = 0;k<8;++k)
+				{
+					/*if(in.piece instanceof Pawn)
+						gridCnew[j][k] = new Tile(new Pawn((Pawn)in.piece);
+					if(in.piece instanceof Bishop)
+							this.piece = new Bishop((Bishop)in.piece);
+					if(in.piece instanceof King)
+							this.piece = new King((King)in.piece);
+					if(in.piece instanceof Knight)
+							this.piece = new Knight((Knight)in.piece);
+					if(in.piece instanceof Queen)
+							this.piece = new Queen((Queen)in.piece);
+					if(in.piece instanceof Rook)
+							this.piece = new Rook((Rook)in.piece);
+						this.empty = in.empty;*/
+					gridCnew[j][k] = new Tile(b.grid[j][k]);
+				}
+			}
+			//Tile[][] gridCnew = b.grid.clone();
 			int row = potentialMoves.get(i).getX1();
 			int col = potentialMoves.get(i).getY1();
 			gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setEmpty(false);
 			gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridC[row][col].getPiece());
 			gridCnew[row][col].setEmpty(true);
 			gridCnew[row][col].setPiece(null);
-			teamScores[i] = MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,b.getAI().getOpponent());
+			teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,b.getAI().getOpponent()));
+			if(alpha <= teamScores.get(i))
+			{
+				alpha = teamScores.get(i);
+			}
 		}
 		int moveLocation = -1;
 		float maxValue = Float.NEGATIVE_INFINITY;
 		for(int i = 0; i < potentialMoves.size();++i)
 		{
-			if(maxValue < teamScores[i])
+			if(maxValue < teamScores.get(i))
 			{
-				maxValue = teamScores[i]; 
+				maxValue = teamScores.get(i); 
 				moveLocation = i;
 			}
 		}
@@ -121,7 +151,8 @@ public class MiniMaxAlphaBeta {
 		
 		ArrayList<Move> potentialMoves = getAllMoves(colorIn,currentState);
 		//Float a[potentialMoves.size()] = new Float[potentialMoves.size()]();
-		float[] teamScores = new float[potentialMoves.size()]; 
+		//float[] teamScores = new float[potentialMoves.size()];
+		Vector<Float> teamScores = new Vector<Float>();
 		if(depth == maxDepth)
 		{
 			//even first is to minimize
@@ -130,23 +161,33 @@ public class MiniMaxAlphaBeta {
 			{
 				for(int i = 0; i<potentialMoves.size();++i)
 				{
-					Tile[][] gridCnew = currentState.clone();
+					//Tile[][] gridCnew = currentState.clone();
+					Tile[][] gridCnew = new Tile[8][8];
+					for(int j = 0;j<8;++j)
+					{
+						for(int k = 0;k<8;++k)
+						{
+							gridCnew[j][k] = new Tile(b.grid[j][k]);
+						}
+					}
 					int row = potentialMoves.get(i).getX1();
 					int col = potentialMoves.get(i).getY1();
+					gridCnew[row][col].getPiece().setRow(potentialMoves.get(i).getX2());
+					gridCnew[row][col].getPiece().setColumn(potentialMoves.get(i).getY2());
 					gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setEmpty(false);
 					gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridCnew[row][col].getPiece());
 					gridCnew[row][col].setEmpty(true);
 					gridCnew[row][col].setPiece(null);
-					teamScores[i] = calculatePieces(b.getAI().getTeam(),gridCnew);
+					teamScores.add(calculatePieces(b.getAI().getTeam(),gridCnew));
 					 
 				}
 				float min = Float.POSITIVE_INFINITY;
 				int minLocation = -1;
 				for(int i = 0; i<potentialMoves.size();++i)
 				{
-					if(min > teamScores[i])
+					if(min > teamScores.get(i))
 					{
-						min = teamScores[i];
+						min = teamScores.get(i);
 						minLocation = i;
 					}
 				}
@@ -157,23 +198,33 @@ public class MiniMaxAlphaBeta {
 			{
 				for(int i = 0; i<potentialMoves.size();++i)
 				{
-					Tile[][] gridCnew = currentState.clone();
+					//Tile[][] gridCnew = currentState.clone();
+					Tile[][] gridCnew = new Tile[8][8];
+					for(int j = 0;j<8;++j)
+					{
+						for(int k = 0;k<8;++k)
+						{
+							gridCnew[j][k] = new Tile(b.grid[j][k]);
+						}
+					}
 					int row = potentialMoves.get(i).getX1();
 					int col = potentialMoves.get(i).getY1();
+					gridCnew[row][col].getPiece().setRow(potentialMoves.get(i).getX2());
+					gridCnew[row][col].getPiece().setColumn(potentialMoves.get(i).getY2());
 					gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setEmpty(false);
 					gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridCnew[row][col].getPiece());
 					gridCnew[row][col].setEmpty(true);
 					gridCnew[row][col].setPiece(null);
-					teamScores[i] = calculatePieces(color,gridCnew);
+					teamScores.add(calculatePieces(b.getAI().getTeam(),gridCnew));
 					 
 				}
-				float max = Float.POSITIVE_INFINITY;
+				float max = Float.NEGATIVE_INFINITY;
 				int maxLocation = -1;
 				for(int i = 0; i<potentialMoves.size();++i)
 				{
-					if(max > teamScores[i])
+					if(max < teamScores.get(i))
 					{
-						max = teamScores[i];
+						max = teamScores.get(i);
 						maxLocation = i;
 					}
 				}
@@ -184,36 +235,69 @@ public class MiniMaxAlphaBeta {
 		{ // Calculate from given recursive values
 			for(int i = 0; i<potentialMoves.size();++i)
 			{
-				Tile[][] gridCnew = currentState.clone();
+				float bestVal = Float.NEGATIVE_INFINITY;
+				if(beta <= alpha)
+				{
+					break;
+				}
+				//Tile[][] gridCnew = currentState.clone();
+				Tile[][] gridCnew = new Tile[8][8];
+				for(int j = 0;j<8;++j)
+				{
+					for(int k = 0;k<8;++k)
+					{
+						gridCnew[j][k] = new Tile(b.grid[j][k]);
+					}
+				}
 				int row = potentialMoves.get(i).getX1();
 				int col = potentialMoves.get(i).getY1();
+				gridCnew[row][col].getPiece().setRow(potentialMoves.get(i).getX2());
+				gridCnew[row][col].getPiece().setColumn(potentialMoves.get(i).getY2());
 				gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setEmpty(false);
 				gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridCnew[row][col].getPiece());
 				gridCnew[row][col].setEmpty(true);
 				gridCnew[row][col].setPiece(null);
-				if(color == "white")
+				if(colorIn == "white")
 				{
-					teamScores[i] = MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"black");
+					teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"black"));
 				}
-				else if(color == "black")
+				else if(colorIn == "black")
 				{
-					teamScores[i] = MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"white");
+					teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"white"));
 				}
 				 //MM2(Move init,Tile[][] currentState,int maxDepth,int depth,float alpha,float beta,String colorIn)
+				if((depth%2) == 1)
+				{
+					if(teamScores.get(i) <= beta)
+					{
+						beta = teamScores.get(i);
+					}
+				}
+				if((depth%2) == 0)
+				{
+					if(teamScores.get(i) >= alpha)
+					{
+						alpha = teamScores.get(i);
+					}
+				}
 			}
 			if((depth%2) == 1)
 			{
 				//maximize
-				float max = Float.POSITIVE_INFINITY;
+				float max = Float.NEGATIVE_INFINITY;
 				int maxLocation = -1;
-				for(int i = 0; i<potentialMoves.size();++i)
+				for(int i = 0; i<teamScores.size();++i)
 				{
-					if(max > teamScores[i])
+					if(max < teamScores.get(i))
 					{
-						max = teamScores[i];
+						max = teamScores.get(i);
 						maxLocation = i;
 					}
 				}
+				/*if(alpha <= max)
+				{
+					alpha = max;
+				}*/
 				 return max;
 			}
 			else if((depth % 2) == 0)
@@ -221,14 +305,18 @@ public class MiniMaxAlphaBeta {
 				//minimizen m
 				float min = Float.POSITIVE_INFINITY;
 				int minLocation = -1;
-				for(int i = 0; i<potentialMoves.size();++i)
+				for(int i = 0; i<teamScores.size();++i)
 				{
-					if(min > teamScores[i])
+					if(min > teamScores.get(i))
 					{
-						min = teamScores[i];
+						min = teamScores.get(i);
 						minLocation = i;
 					}
 				}
+				/*if(beta >= min)
+				{
+					beta = min;
+				}*/
 				 return min;
 			}
 		}
@@ -245,7 +333,7 @@ public class MiniMaxAlphaBeta {
 			for(int j = 0;j<8;++j)
 			{
 				Piece p = grid[i][j].getPiece();
-				if(p.isEmpty())
+				if(grid[i][j].isEmpty())
 				{
 					
 				}
@@ -269,6 +357,7 @@ public class MiniMaxAlphaBeta {
 	{
 		
 	}*/
+	
 	public ArrayList<Move> getAllMoves(String color,Tile[][] grid)
 	{
 		ArrayList<Move> output = new ArrayList<Move>();
@@ -278,7 +367,10 @@ public class MiniMaxAlphaBeta {
 			{
 				if(!grid[i][j].isEmpty())
 				{
-					output.addAll(getMoves(color,grid[i][j]));
+					if(grid[i][j].getPiece().color == color)
+					{
+						output.addAll(getMoves(color,grid[i][j]));
+					}
 				}
 			}
 		}
@@ -330,9 +422,8 @@ public class MiniMaxAlphaBeta {
 		{
 			newRo[0] = row+1;
 			newRo[1] = row+2;
-			newCo[0] = row;
+			newCo[0] = col-1;
 			newCo[1] = col+1;
-			newCo[2] = col+2;
 			
 		}
 		else if((color == "black") && row != 8)
@@ -340,16 +431,20 @@ public class MiniMaxAlphaBeta {
 			newRo[0] = row-1;
 			newRo[1] = row-2;
 			newCo[0] = col-1;
-			newCo[0] = col-2;
+			newCo[1] = col-2;
 		}
-		for(int i = 0;i<3;++i)
+		for(int i = 0;i<2;++i)
 		{
 			if(p.isValidMove(newRo[0],newCo[i]))
 					output.add(new Move(row,col,newRo[0],newCo[i]));
 		}
-		if(p.isValidMove(newRo[1],newCo[0]))
+		if(p.isValidMove(newRo[1],col))
 		{
-			output.add(new Move(row,col,newRo[1],newCo[0]));
+			output.add(new Move(row,col,newRo[1],col));
+		}
+		if(p.isValidMove(newRo[0],col))
+		{
+			output.add(new Move(row,col,newRo[0],col));
 		}
 		return output;
 	}
@@ -375,7 +470,7 @@ public class MiniMaxAlphaBeta {
 					}
 				}
 			}
-			for(int i = col;i<col;++i)
+			for(int i = 0;i<col;++i)
 			{
 				if(col == i)
 				{
@@ -398,57 +493,46 @@ public class MiniMaxAlphaBeta {
 		int row = currentSpot.getPiece().getRow();
 		int col = currentSpot.getPiece().getColumn();
 		ArrayList<Move> output= new ArrayList<Move>();
-		int newRow[] = {row+1,row-1,row+2,row-2};
-		int newCol[] = {col+2,col-2,col+1,col-1};
-			for(int i = 0; i< 8;++i)
-			{
-					if((i<2) && (newCol[0] > 0) && (newRow[i] >= 0) && (newRow[i] <= 7))
-					{
-						if(p.isValidMove(newRow[i],newCol[0]))
-						{
-							output.add(new Move(row,col,newRow[i],newCol[0]));
-						}
-						
-					}
-					if((i>=2) &&(i<4) &&(newCol[1] < 8) && (newRow[i%2] >= 0) && (newRow[i%2] <= 7))
-					{
-						if(p.isValidMove(newRow[i%2],newCol[1]))
-						{
-							output.add(new Move(row,col,newRow[i%2],newCol[1]));
-						}
-						
-					}
-					if((i>=4) &&(i<6) &&(newRow[2] < 8) && (newCol[i-2] >= 0) && (newCol[i-2] <= 7))
-					{
-						if(p.isValidMove(newRow[i%2],newCol[i-2]))
-						{
-							output.add(new Move(row,col,newRow[2],newCol[i-2]));
-						}
-						
-					}
-					if((i>=6) &&(i<8) &&(newRow[3] < 8) && (newCol[i-4] >= 0) && (newCol[i-4] <= 7))
-					{
-						if(p.isValidMove(newRow[3],newCol[i-4]));
-						{
-							output.add(new Move(row,col,newRow[3],newCol[i-4]));
-						}
-						
-					}
-			}
+		int X[] = { 2, 1, -1, -2, -2, -1, 1, 2 }; 
+	    int Y[] = { 1, 2, 2, 1, -1, -2, -2, -1 }; 
+	  
+	    int count = 0; 
+	  
+	    // Check if each possible move is valid or not 
+	    for (int i = 0; i < 8; i++) 
+	    { 
+	  
+	        // Position of knight after move 
+	        int x = row + X[i]; 
+	        int y = col + Y[i]; 
+	        if(p.isValidMove(x,y))
+	        {
+	        	output.add(new Move(row,col,x,y));
+	        }
+	        
+	    }
 			
 		
 		return output;
 	}
 	public ArrayList<Move> bishopMoves(String color,Tile currentSpot)
 	{
-		Knight p = (Knight)currentSpot.getPiece();
+		Bishop p = (Bishop)currentSpot.getPiece();
 		int row = currentSpot.getPiece().getRow();
 		int col = currentSpot.getPiece().getColumn();
 		ArrayList<Move> output = new ArrayList<Move>();
 		int i = row;
 		int j = col;
-		while(i != 7)
+		while((i <= 7) && (j >= 0))
 		{
+			// RIGHT DOWN, left side down diagonal
+			/*
+			 * 0 0 0 0 0 0 0 0
+			 * 0 0 0 0 P 0 0 0
+			 * 0 0 0 H 0 0 0 0
+			 * 0 0 H 0 0 0 0 0
+			 * 0 H 0 0 0 0 0 0
+			 */
 			++i;
 			--j;
 			if(p.isValidMove(i,j))
@@ -456,8 +540,18 @@ public class MiniMaxAlphaBeta {
 				output.add(new Move(row,col,i,j));
 			}
 		}
-		while(i != 0)
+		i = row;
+		j = col;
+		while((i >= 0) && (j <= 7))
 		{
+			//RIGHT UP, right side up diagonal
+			/*
+			 * 0 0 0 0 0 H 0 0
+			 * 0 0 0 0 H 0 0 0
+			 * 0 0 0 H 0 0 0 0
+			 * 0 0 P 0 0 0 0 0
+			 * 0 0 0 0 0 0 0 0
+			 */
 			--i;
 			++j;
 			if(p.isValidMove(i,j))
@@ -466,8 +560,18 @@ public class MiniMaxAlphaBeta {
 			}
 			
 		}
-		while(i != 0)
+		i = row;
+		j = col;
+		while((i >= 0) && (j >= 0))
 		{
+			//LEFT UP, left side up diagonal
+			/*
+			 * 0 0 H 0 0 0 0 0
+			 * 0 0 0 H 0 0 0 0
+			 * 0 0 0 0 H 0 0 0
+			 * 0 0 0 0 0 P 0 0
+			 * 0 0 0 0 0 0 0 0
+			 */
 			--i;
 			--j;
 			if(p.isValidMove(i,j))
@@ -475,8 +579,18 @@ public class MiniMaxAlphaBeta {
 				output.add(new Move(row,col,i,j));
 			}
 		}
-		while(i != 7)
+		i = row;
+		j = col;
+		while((i <= 7) && (j <= 7))
 		{
+			//RIGHT UP, right side up diagonal
+			/*
+			 * 0 0 0 0 0 H 0 0
+			 * 0 0 0 0 H 0 0 0
+			 * 0 0 0 H 0 0 0 0
+			 * 0 0 P 0 0 0 0 0
+			 * 0 0 0 0 0 0 0 0
+			 */
 			++i;
 			++j;
 			if(p.isValidMove(i,j))
@@ -560,18 +674,20 @@ public class MiniMaxAlphaBeta {
 		int row = p.getRow();
 		int col = p.getColumn();
 		ArrayList<Move> output = new ArrayList<Move>();
-		int directionRow = row - newRow;
-		int directionCol = col - newCol;
+		int directionRow = newRow-row;
+		int directionCol = newCol-col;
 		newRow = row+directionRow;
 		newCol = col+directionCol;
-		while(!isObstacle(newRow,newCol))
+		while((newRow >= 0 && newRow<= 7 && newCol >= 0 && newCol <= 7) && (!isObstacle(newRow,newCol)))
 		{
 			if(p.isValidMove(newRow,newCol))
 			{
 				output.add(new Move(row,col,newRow,newCol));
 			}
+			directionRow = newRow-row;
+			directionCol = newCol-col;
 		}
-		if(p.isValidMove(newRow,newCol))
+		if((newRow >= 0 && newRow<= 7 && newCol >= 0 && newCol <= 7) && p.isValidMove(newRow,newCol))
 		{
 			output.add(new Move(row,col,newRow,newCol));
 		}

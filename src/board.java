@@ -22,7 +22,7 @@ public class board extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	// AI declarations 
-	private AI ai;;
+	private AI ai;
 	private boolean isAI = false; // ***FIXME**** temp var to give AI moves
 	private String AIColor;
 	private String AI_difficulty;
@@ -31,10 +31,10 @@ public class board extends JFrame implements Runnable {
 	
 	// define the board specifications
 	JFrame space = new JFrame("Chess");
-	private JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
+	JButton[][] tiles = new JButton[8][8]; // 8*8 grid buttons for tiles
 	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
-	protected Tile[][] grid = new Tile[8][8];  // keep track of the board state
+	Tile[][] grid = new Tile[8][8];  // keep track of the board state
 	
 	// client-server declarations
 	private Thread thread;
@@ -51,8 +51,8 @@ public class board extends JFrame implements Runnable {
 	private String turn = "white";
 	private Piece selected;
 	private boolean select = false;
-	private Vector<Piece> white_pieces;  // vector to keep track of white pieces
-	private Vector<Piece> black_pieces;  // vector to keep track of black pieces
+	Vector<Piece> white_pieces;  // vector to keep track of white pieces
+	Vector<Piece> black_pieces;  // vector to keep track of black pieces
 	private int numOfQueens = 2;
 	private int row_moved_from;
 	private int column_moved_from;
@@ -82,7 +82,8 @@ public class board extends JFrame implements Runnable {
 		// initialize game configuration set by user in the menu
 		AI_AI = _AI_AI;  // true if in 'computer vs. computer' mode.
 		AI_play = _AI_play; // true if in 'human vs computer' mode.
-		network_play = _network_play; // false if in "human vs. computer" mode. 
+		// **NOTE for Joshua** comment this (network_play) out if you dont want to connect to the network. 
+		network_play = _network_play; // currently always true, meaning that we will always connect to the network
 		AIColor = _AIColor; // determines color of AI
 		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
 		
@@ -92,7 +93,7 @@ public class board extends JFrame implements Runnable {
 		// initialize the AI
 		if (AI_play) // ***NOTE for Joshua**** if the mode is AI_AI (computer vs. computer), the color will be set by the server in the connect server function (currently working on this)
 		{
-			ai = new AI(AIColor);// **Note for Joshua** update to ai = new AI(AIColor, AI_difficulty); when difficulty levels are established as a parameter to the AI constructor
+			ai = new AI(this,AIColor,AI_difficulty);// **Note for Joshua** update to ai = new AI(AIColor, AI_difficulty); when difficulty levels are established as a parameter to the AI constructor
 		}
 		
 		// initialize menu bar
@@ -445,15 +446,6 @@ public class board extends JFrame implements Runnable {
 			processSelection(x, y);
 			return;
 		}
-    
-        if(isAI)
-		{
-		ai.getTurn(turn);
-		ai.getXandY(x,y);
-		ai.getSelected(select,selected);
-		ai.updateBoard();
-		}
-        
         else processMove(x, y);
 
 	}
@@ -489,28 +481,6 @@ public class board extends JFrame implements Runnable {
 	{
 		if (grid[x][y].isEmpty())
 		{
-			// check if the move will put your king in check
-			grid[selected.getRow()][selected.getColumn()].setEmpty(true);
-			
-			if (selected.getColor().equals("white"))
-			{
-				if (kings[0].isCheck())
-				{
-					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
-					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
-					return false;  // this move will put your king in check
-				}
-			}
-			if (selected.getColor().equals("black"))
-			{
-				if (kings[1].isCheck())
-				{
-					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
-					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
-					return false; // this move will put your king in check
-				}
-			}
-			
 			return true;
 		}
 		else if (grid[x][y].getPiece().getColor() == turn)
@@ -521,32 +491,6 @@ public class board extends JFrame implements Runnable {
 		{
 			grid[x][y].getPiece().setIsAlive(false); // kill piece
 			grid[x][y].setEmpty(true); // empty space
-			
-			// check if this move will leave or put your own king in check
-			grid[selected.getRow()][selected.getColumn()].setEmpty(true);  
-			
-			if (selected.getColor().equals("white"))
-			{
-				if (kings[0].isCheck())
-				{
-					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
-					grid[x][y].getPiece().setIsAlive(true); 
-					grid[x][y].setEmpty(false); 
-					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
-					return false; // this move will put, or leave your king in check
-				}
-			}
-			if (selected.getColor().equals("black"))
-			{
-				if (kings[1].isCheck())
-				{
-					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
-					grid[x][y].getPiece().setIsAlive(true); 
-					grid[x][y].setEmpty(false); 
-					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
-					return false; // this move will put, or leave your king in check
-				}
-			}
 			
 			// remove piece from the vector of pieces
 			if (grid[x][y].getPiece().getColor().equals("white"))
@@ -942,6 +886,9 @@ public class board extends JFrame implements Runnable {
 	public void setKings(King[] kings) {
 		this.kings = kings;
 	}
-
+	public AI getAI()
+	{
+		return ai;
+	}
 }
 	
