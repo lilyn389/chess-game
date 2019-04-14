@@ -82,8 +82,7 @@ public class board extends JFrame implements Runnable {
 		// initialize game configuration set by user in the menu
 		AI_AI = _AI_AI;  // true if in 'computer vs. computer' mode.
 		AI_play = _AI_play; // true if in 'human vs computer' mode.
-		// **NOTE for Joshua** comment this (network_play) out if you dont want to connect to the network. 
-		network_play = _network_play; // currently always true, meaning that we will always connect to the network
+		network_play = _network_play; // false if in "human vs. computer" mode. 
 		AIColor = _AIColor; // determines color of AI
 		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
 		
@@ -490,6 +489,28 @@ public class board extends JFrame implements Runnable {
 	{
 		if (grid[x][y].isEmpty())
 		{
+			// check if the move will put your king in check
+			grid[selected.getRow()][selected.getColumn()].setEmpty(true);
+			
+			if (selected.getColor().equals("white"))
+			{
+				if (kings[0].isCheck())
+				{
+					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
+					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
+					return false;  // this move will put your king in check
+				}
+			}
+			if (selected.getColor().equals("black"))
+			{
+				if (kings[1].isCheck())
+				{
+					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
+					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
+					return false; // this move will put your king in check
+				}
+			}
+			
 			return true;
 		}
 		else if (grid[x][y].getPiece().getColor() == turn)
@@ -500,6 +521,32 @@ public class board extends JFrame implements Runnable {
 		{
 			grid[x][y].getPiece().setIsAlive(false); // kill piece
 			grid[x][y].setEmpty(true); // empty space
+			
+			// check if this move will leave or put your own king in check
+			grid[selected.getRow()][selected.getColumn()].setEmpty(true);  
+			
+			if (selected.getColor().equals("white"))
+			{
+				if (kings[0].isCheck())
+				{
+					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
+					grid[x][y].getPiece().setIsAlive(true); 
+					grid[x][y].setEmpty(false); 
+					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
+					return false; // this move will put, or leave your king in check
+				}
+			}
+			if (selected.getColor().equals("black"))
+			{
+				if (kings[1].isCheck())
+				{
+					grid[selected.getRow()][selected.getColumn()].setEmpty(false);
+					grid[x][y].getPiece().setIsAlive(true); 
+					grid[x][y].setEmpty(false); 
+					JOptionPane.showMessageDialog(space, "Can't move here, this will put your king in check");
+					return false; // this move will put, or leave your king in check
+				}
+			}
 			
 			// remove piece from the vector of pieces
 			if (grid[x][y].getPiece().getColor().equals("white"))
