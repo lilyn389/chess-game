@@ -13,7 +13,6 @@ public class InitializationMenu implements ActionListener {
     JRadioButton player_1;
     JRadioButton player_2;
     JRadioButton player_3;
-    JRadioButton player_4;
     JRadioButton level_1;
     JRadioButton level_2;
     JRadioButton level_3;
@@ -56,25 +55,21 @@ public class InitializationMenu implements ActionListener {
         player_1 = new JRadioButton("Computer vs. Computer");
         player_2 = new JRadioButton("Play the Computer");
         player_3 = new JRadioButton("Play a Human");
-        player_4 = new JRadioButton("Local Game");
         begin = new JButton("Begin");
         player_1.addActionListener(this);
         player_2.addActionListener(this);
         player_3.addActionListener(this);
-        player_4.addActionListener(this);
         begin.addActionListener(this);
         
         ButtonGroup bg2 = new ButtonGroup();
         bg2.add(player_1);
         bg2.add(player_2);
         bg2.add(player_3);
-        bg2.add(player_4);
         
         JPanel card1 = new JPanel();
         card1.add(player_1);
         card1.add(player_2);
         card1.add(player_3);
-        card1.add(player_4);
         
         JPanel card2 = new JPanel();
         card2.add(begin);
@@ -131,11 +126,6 @@ public class InitializationMenu implements ActionListener {
 		{
 			network_play = true;
 			IP = JOptionPane.showInputDialog("Enter IP Address");
-			cl.show(cards, "MyPanel2");
-		}
-		
-		if (e.getSource() == player_4) // player_4 = Local game
-		{
 			cl.show(cards, "MyPanel2");
 		}
 		

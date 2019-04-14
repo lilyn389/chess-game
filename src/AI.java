@@ -183,7 +183,7 @@ public class AI {
 		}
 	}
 	//public Pawn[] pawns;
-	public AI(board bin,String teamIn,int maxDepthIn)
+	public AI(board bin,String AIColor,String difficulty)
 	{
 		//Pawn[] pawnsIn,Rook[] rooksIn,King[] kingsIn,Queen[] queensIn,Bishop[] bishopsIn,Knight[] knightsIn
 		//JButton tiles = new JButton[8][8]
@@ -193,10 +193,10 @@ public class AI {
 		//private Tile[][] grid = new Tile[8][8];  // keep track of the board state
 		// define bishops
 		//select = false;
-		team = teamIn;
+	
 		b =bin;
-		maxDepth = maxDepthIn;
-		
+		maxDepth = determineDifficulty(difficulty);
+		team = AIColor;
 		//pawns = pawnsIn;
 		//rooks = rooksIn;
 		//kings = kingsIn;
@@ -204,6 +204,25 @@ public class AI {
 		//bishops = bishopsIn;
 		//knights = knightsIn;
 		
+	}
+	int determineDifficulty(String diff)
+	{
+		if(diff == "easy")
+		{
+			return 4;
+		}
+		else if(diff == "medium")
+		{
+			return 8;
+		}
+		else if(diff == "hard")
+		{
+			return 12;
+		}
+		else
+		{
+			return 4;
+		}
 	}
 	void calculateBestMove(){
 	    //generate all the moves for a given position

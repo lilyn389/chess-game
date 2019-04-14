@@ -1,13 +1,13 @@
 import javax.swing.ImageIcon;
 import java.util.*;
 
-public class King extends Piece {
+public class King extends Piece implements Cloneable{
 	
 	private ImageIcon king;
 	private Vector<Piece> assassin = new Vector<Piece>(); // this is the piece that is currently able to kill the King
-	private Vector<Piece> pieces; // same color as the King
-	private Vector<Piece> enemy_pieces; 
-	private Tile[][] grid;
+	private Vector<Piece> pieces = new Vector<Piece>(); // same color as the King
+	private Vector<Piece> enemy_pieces = new Vector<Piece>(); 
+	//private Tile[][] grid;
 	
 	private boolean firstMove = true;
 	
@@ -20,7 +20,46 @@ public class King extends Piece {
 			king = new ImageIcon("black_king.png");
 		}
 	}
-
+	public King(King in)
+	{
+		super(in);
+		firstMove = in.getFirstMove();
+		if (color == "white") {
+			king = new ImageIcon("white_king.png");
+		}
+		else {
+			king = new ImageIcon("black_king.png");
+		}
+		for(int i = 0;i<grid.length;++i)
+		{
+			for(int j=0;j<grid[0].length;++j)
+			{
+				if(grid[i][j].getPiece() != null)
+				{
+					if(this.color != grid[i][j].getPiece().color)
+					{
+						enemy_pieces.add(grid[i][j].getPiece());
+					}
+					else if(this.color == grid[i][j].getPiece().color)
+					{
+						pieces.add(grid[i][j].getPiece());
+					}
+				}
+			}
+		}
+		
+	}
+	public boolean getFirstMove()
+	{
+		return firstMove;
+	}
+	public Object clone() {
+	    try {
+	        return (King) super.clone();
+	    } catch (CloneNotSupportedException e) {
+	        return new King(this.grid, this.color,this.name,this.row,this.column,this.ID,this.is_alive);
+	    }
+	}
 	public Vector<Piece> getEnemyPieces() {
 		return enemy_pieces;
 	}
@@ -76,12 +115,13 @@ public class King extends Piece {
 		if (row == x && y == column) {
 			return false;
 		}
-		
-		if (!grid[x][y].isEmpty()) {
-			if (grid[x][y].getPiece().getColor() == color) {
-				return false;
+		if(x >= 0 && x <= 7 && y >=0 && y <= 7)
+		{
+			if (!grid[x][y].isEmpty()) {
+				if (grid[x][y].getPiece().getColor() == color) {
+					return false;
+				}
 			}
-		}
 		
 		int row_diff = Math.abs(x - this.getRow());
 		int column_diff = Math.abs(y - this.getColumn());
@@ -96,6 +136,8 @@ public class King extends Piece {
 			
 			return false;
 		}
+		}
+		return false;
 	}
 	
 	//Future feature
@@ -297,6 +339,10 @@ public class King extends Piece {
 			
 		}
 		return true;   // the king is in check mate
+	}
+	public int getValue()
+	{
+		return 900;
 	}
 }
 
