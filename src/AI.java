@@ -224,23 +224,31 @@ public class AI {
 			return 4;
 		}
 	}
-	void calculateBestMove(){
-	    //generate all the moves for a given position
-	   // object newGameMoves = game.ugly_moves();
-	    //return newGameMoves[Math.floor(Math.random() * newGameMoves.length)];
-		MinMax = new MiniMaxAlphaBeta(b,team,maxDepth);
+
+	Move calculateBestMove() {
+		// generate all the moves for a given position
+		// object newGameMoves = game.ugly_moves();
+		// return newGameMoves[Math.floor(Math.random() * newGameMoves.length)];
+		MinMax = new MiniMaxAlphaBeta(b, team, maxDepth);
 		Move m = MinMax.MM();
-		if((m.getX1() == m.getX2()) && (m.getY1() == m.getY2()))
-		{
-			calculateRandomMove(calculateRandomPiece());
-		}
-		else
-		{
-			
-			b.grid[m.getX2()][m.getY2()].setPiece(b.grid[m.getX1()][m.getY1()].getPiece());
-			b.grid[m.getX2()][m.getY2()].setEmpty(false);
-			b.grid[m.getX1()][m.getY1()].setPiece(null);
-			b.grid[m.getX1()][m.getY1()].setEmpty(true);
+		if (m.getX1() >= 0 && m.getX1() <= 7 && m.getY1() >= 0 && m.getY1() <= 0) {
+			if (b.grid[m.getX1()][m.getY1()].isEmpty()) {
+				return calculateRandomMove(calculateRandomPiece());
+			} else if (!b.grid[m.getX1()][m.getY1()].getPiece().isValidMove(m.getX2(), m.getY2())) {
+				return calculateRandomMove(calculateRandomPiece());
+			} else {
+
+				/*
+				 * b.grid[m.getX2()][m.getY2()].setPiece(b.grid[m.getX1()][m.
+				 * getY1()].getPiece());
+				 * b.grid[m.getX2()][m.getY2()].setEmpty(false);
+				 * b.grid[m.getX1()][m.getY1()].setPiece(null);
+				 * b.grid[m.getX1()][m.getY1()].setEmpty(true);
+				 */
+				return m;
+			}
+		} else {
+			return calculateRandomMove(calculateRandomPiece());
 		}
 	};
 	public int calculateRandomPiece()
@@ -263,7 +271,7 @@ public class AI {
 	            randPiece = randPiece -1;
 	        return randPiece;
 	}
-	public void calculateRandomMove(int randomPiece)
+	public Move calculateRandomMove(int randomPiece)
 	{
 		
 		int max = 7;
@@ -285,7 +293,7 @@ public class AI {
         }
         if(selected.isValidMove(randSpotRow,randSpotCol));
         {
-        	int row = selected.getRow();
+        	/*int row = selected.getRow();
         	int col = selected.getColumn();
         	jbuttons[7-row][col].setIcon(null);
 			jbuttons[7-row][col].setIcon(selected.getIcon());
@@ -296,8 +304,10 @@ public class AI {
 			grid[7-randSpotRow][randSpotCol].setPiece(selected);
 			grid[7-randSpotRow][randSpotCol].setEmpty(false);
 			b.grid = grid;
-			b.tiles = jbuttons;
-			break;
+			b.tiles = jbuttons;*/
+        	Move out = new Move(selected.getRow(),selected.getColumn(),randSpotRow,randSpotCol);
+        	return out;
+			
         	
         } 
         
