@@ -6,7 +6,7 @@ public class Queen extends Piece implements Cloneable{
 	
 	public Queen(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		super(gridIn, color, name, row, column, ID, alive);
-		if (color == "white") {
+		if (color.equals("white")) {
 			queen = new ImageIcon("white_queen.png");
 		}
 		else {
@@ -16,7 +16,7 @@ public class Queen extends Piece implements Cloneable{
 	public Queen(Queen in)
 	{
 		super(in);
-		if (color == "white") {
+		if (color.equals("white")) {
 			queen = new ImageIcon("white_queen.png");
 		}
 		else {
@@ -52,7 +52,7 @@ public class Queen extends Piece implements Cloneable{
 			{
 				if(!grid[x][y].isEmpty())
 				{
-					if(grid[x][y].getPiece().color == color)
+					if(grid[x][y].getPiece().color.equals(color))
 					{
 						return false;
 					}

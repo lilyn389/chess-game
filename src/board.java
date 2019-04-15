@@ -22,7 +22,7 @@ public class board extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	// AI declarations 
-	private AI ai;
+	public AI ai;
 	private boolean isAI = false; // ***FIXME**** temp var to give AI moves
 	private String AIColor;
 	private String AI_difficulty;
@@ -46,11 +46,11 @@ public class board extends JFrame implements Runnable {
 	private String server_msg;
 	private boolean network_play = false;
 	private String my_color;	
-	private String IP;
+	protected String IP;
 	
 	// move helper variables
 	private String turn = "white";
-	private Piece selected;
+	protected Piece selected;
 	private boolean select = false;
 	Vector<Piece> white_pieces;  // vector to keep track of white pieces
 	Vector<Piece> black_pieces;  // vector to keep track of black pieces
@@ -367,7 +367,7 @@ public class board extends JFrame implements Runnable {
 		space.setVisible(visible);
 		
 		// Connect to the server
-		if (network_play)
+		if (network_play && !AI_AI)
 		{
 			thread = new Thread(this, "board");
 			thread.start();
@@ -376,7 +376,7 @@ public class board extends JFrame implements Runnable {
 	
   
 	/* This function connects to the server and to the other player */
-	private boolean connectToServer(String IP) throws InterruptedException, IOException
+	protected boolean connectToServer(String IP) throws InterruptedException, IOException
 	{
 		// connect to server
 		s = new Socket(IP, 9998);
@@ -700,7 +700,7 @@ public class board extends JFrame implements Runnable {
 		JOptionPane.showMessageDialog(space, winner + "is the winner!");
 	}
 	
-	private void sendMove(int x, int y) 
+	protected void sendMove(int x, int y) 
 	{
 		String svr_msg = "";
 		String from, to, move_msg;
@@ -784,7 +784,7 @@ public class board extends JFrame implements Runnable {
 
 	}
 	
-	private boolean getMove() 
+	protected boolean getMove() 
 	{
 		// get move from server
 		String move_msg = null;

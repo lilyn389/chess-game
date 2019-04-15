@@ -6,7 +6,7 @@ public class Bishop extends Piece implements Cloneable{
 	
 	public Bishop(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		super(gridIn, color, name, row, column, ID, alive);
-		if (color == "white") {
+		if (color.equals("white")) {
 			bishop = new ImageIcon("white_bishop.png");
 		}
 		else {
@@ -16,7 +16,7 @@ public class Bishop extends Piece implements Cloneable{
 	public Bishop(Bishop in)
 	{
 		super(in);
-		if (color == "white") {
+		if (color.equals("white")) {
 			bishop = new ImageIcon("white_bishop.png");
 		}
 		else {
@@ -49,7 +49,7 @@ public class Bishop extends Piece implements Cloneable{
 		}
 		if(grid[x][y].getPiece() != null)
 		{
-			if(grid[x][y].getPiece().color == this.color)
+			if(grid[x][y].getPiece().color.equals(this.color))
 			{
 				return false;
 			}

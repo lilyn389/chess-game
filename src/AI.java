@@ -207,15 +207,15 @@ public class AI {
 	}
 	int determineDifficulty(String diff)
 	{
-		if(diff == "easy")
+		if(diff.equals("easy"))
 		{
 			return 4;
 		}
-		else if(diff == "medium")
+		else if(diff.equals("medium"))
 		{
 			return 8;
 		}
-		else if(diff == "hard")
+		else if(diff.equals("hard"))
 		{
 			return 12;
 		}
@@ -256,7 +256,7 @@ public class AI {
 		
 		 int max;// = 5; 
 	        int min = 1;
-	        if(team == "white")
+	        if(team .equals("white"))
 	        {
 	        	max = b.white_pieces.size();
 	        }
@@ -283,7 +283,7 @@ public class AI {
         int randSpotRow = (int)(Math.random() * range) + min;
         int randSpotCol = (int)(Math.random() * range) + min;
       //  getOnBoard(randPieceType,randPiece);
-        if(team == "white")
+        if(team.equals("white"))
         {
         	selected = b.white_pieces.get(randomPiece);
         }

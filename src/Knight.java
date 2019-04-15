@@ -11,7 +11,7 @@ public class Knight extends Piece implements Cloneable{
 	public Knight(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		super(gridIn, color, name, row, column, ID, alive);
 
-		if (color == "white") {
+		if (color.equals( "white")) {
 			knight = new ImageIcon("white_knight.png");
 		}
 		else {
@@ -21,7 +21,7 @@ public class Knight extends Piece implements Cloneable{
 	public Knight(Knight in)
 	{
 		super(in);
-		if (color == "white") {
+		if (color.equals("white")) {
 			knight = new ImageIcon("white_knight.png");
 		}
 		else {
@@ -63,7 +63,7 @@ public class Knight extends Piece implements Cloneable{
 			{
 				if(!grid[x][y].isEmpty())
 				{
-					if(grid[x][y].getPiece().color == color)
+					if(grid[x][y].getPiece().color.equals(color))
 					{
 						return false;
 					}
@@ -77,7 +77,7 @@ public class Knight extends Piece implements Cloneable{
 			{
 				if(!grid[x][y].isEmpty())
 				{
-					if(grid[x][y].getPiece().color == color)
+					if(grid[x][y].getPiece().color.equals(color))
 					{
 						return false;
 					}

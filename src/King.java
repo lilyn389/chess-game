@@ -13,7 +13,7 @@ public class King extends Piece implements Cloneable{
 	
 	public King(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		super(gridIn, color, name, row, column, ID, alive);
-		if (color == "white") {
+		if (color.equals( "white")) {
 			king = new ImageIcon("white_king.png");
 		}
 		else {
@@ -24,7 +24,7 @@ public class King extends Piece implements Cloneable{
 	{
 		super(in);
 		firstMove = in.getFirstMove();
-		if (color == "white") {
+		if (color.equals("white")) {
 			king = new ImageIcon("white_king.png");
 		}
 		else {
@@ -36,11 +36,11 @@ public class King extends Piece implements Cloneable{
 			{
 				if(grid[i][j].getPiece() != null)
 				{
-					if(this.color != grid[i][j].getPiece().color)
+					if(!this.color.equals(grid[i][j].getPiece().color))
 					{
 						enemy_pieces.add(grid[i][j].getPiece());
 					}
-					else if(this.color == grid[i][j].getPiece().color)
+					else if(this.color.equals(grid[i][j].getPiece().color))
 					{
 						pieces.add(grid[i][j].getPiece());
 					}
@@ -118,7 +118,7 @@ public class King extends Piece implements Cloneable{
 		if(x >= 0 && x <= 7 && y >=0 && y <= 7)
 		{
 			if (!grid[x][y].isEmpty()) {
-				if (grid[x][y].getPiece().getColor() == color) {
+				if (grid[x][y].getPiece().getColor().equals(color)) {
 					return false;
 				}
 			}
@@ -176,7 +176,7 @@ public class King extends Piece implements Cloneable{
 		
 		King temp_king;
 		// make a phantom king to move around and check if there is any way to escape being killed by the enemy 
-		if (color == "white") {
+		if (color.equals("white") {
 			temp_king = new King(grid, "white", "king", row, column, 0, true);
 			temp_king.setGrid(grid);
 			temp_king.setPieces(pieces);
@@ -217,7 +217,7 @@ public class King extends Piece implements Cloneable{
 		// see if anyone can kill or block the assassin
 			
 		// unique check for knight 
-		if (assassin.get(0).getName() == "knight") {
+		if (assassin.get(0).getName().equals("knight")) {
 			for (int i = 0; i < pieces.size(); i++) {  // see if one of the pieces can kill the knight
 				if (pieces.get(i).isValidMove(assassin.get(0).getRow(), assassin.get(0).getColumn())) {
 					return false;  // someone is able to kill the knight

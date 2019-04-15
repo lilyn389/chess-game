@@ -7,7 +7,7 @@ public class Rook extends Piece implements Cloneable{
 	
 	public Rook(Tile[][] grid, String color, String name, int row, int column, int ID, boolean alive) {
 		super(grid, color, name, row, column, ID, alive);
-		if (color == "white") {
+		if (color.equals("white")) {
 			rook = new ImageIcon("white_castle.png");
 		}
 		else {
@@ -17,7 +17,7 @@ public class Rook extends Piece implements Cloneable{
 	public Rook(Rook in)
 	{
 		super(in);
-		if (color == "white") {
+		if (color.equals("white")) {
 			rook = new ImageIcon("white_castle.png");
 		}
 		else {
@@ -55,7 +55,7 @@ public class Rook extends Piece implements Cloneable{
 		if(x >= 0 && x <= 7 && y >= 0 && y<= 7)
 		{
 			if(!grid[x][y].isEmpty())
-				if(grid[x][y].getPiece().color == color)
+				if(grid[x][y].getPiece().color.equals(color))
 					return false;
 			
 					return orthagonalMove(x, y);

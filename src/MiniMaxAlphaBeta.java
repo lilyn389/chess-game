@@ -24,7 +24,7 @@ public class MiniMaxAlphaBeta {
 	}
 	private float minValue(ArrayList<Move> state,float alpha,float beta,int depth)
 	{
-		return depth;
+		return d bepth;
 	}
 	private Move MMAlphaBeta(ArrayList<Move> potentialMoves,int maxDepth)
 	{
@@ -76,7 +76,28 @@ public class MiniMaxAlphaBeta {
 	{
 		if(maxDepth > 0)
 		{
-		Tile[][] gridC = b.grid.clone();
+			Tile [][] gridC = new Tile[8][8];
+			for(int j = 0;j<8;++j)
+			{
+			for(int k = 0;k<8;++k)
+			{
+				/*if(in.piece instanceof Pawn)
+					gridCnew[j][k] = new Tile(new Pawn((Pawn)in.piece);
+				if(in.piece instanceof Bishop)
+						this.piece = new Bishop((Bishop)in.piece);
+				if(in.piece instanceof King)
+						this.piece = new King((King)in.piece);
+				if(in.piece instanceof Knight)
+						this.piece = new Knight((Knight)in.piece);
+				if(in.piece instanceof Queen)
+						this.piece = new Queen((Queen)in.piece);
+				if(in.piece instanceof Rook)
+						this.piece = new Rook((Rook)in.piece);
+					this.empty = in.empty;*/
+				
+				gridC[j][k] = new Tile(b.grid[j][k]);
+			}
+			}
 		//alpha = Float.NEGATIVE_INFINITY;
 		//beta = Float.POSITIVE_INFINITY;
 		float alpha = Float.NEGATIVE_INFINITY;
@@ -235,7 +256,7 @@ public class MiniMaxAlphaBeta {
 		{ // Calculate from given recursive values
 			for(int i = 0; i<potentialMoves.size();++i)
 			{
-				float bestVal = Float.NEGATIVE_INFINITY;
+				//float bestVal = Float.NEGATIVE_INFINITY;
 				if(beta <= alpha)
 				{
 					break;
@@ -257,11 +278,11 @@ public class MiniMaxAlphaBeta {
 				gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridCnew[row][col].getPiece());
 				gridCnew[row][col].setEmpty(true);
 				gridCnew[row][col].setPiece(null);
-				if(colorIn == "white")
+				if(colorIn.equals("white"))
 				{
 					teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"black"));
 				}
-				else if(colorIn == "black")
+				else if(colorIn.equals("black"))
 				{
 					teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"white"));
 				}
@@ -340,7 +361,7 @@ public class MiniMaxAlphaBeta {
 				else
 				{
 					
-					if(p.color == color)
+					if(p.color.equals( color))
 					{
 						colorsPieces = colorsPieces + p.getValue();
 					}
@@ -367,7 +388,7 @@ public class MiniMaxAlphaBeta {
 			{
 				if(!grid[i][j].isEmpty())
 				{
-					if(grid[i][j].getPiece().color == color)
+					if(grid[i][j].getPiece().color.equals(color))
 					{
 						output.addAll(getMoves(color,grid[i][j]));
 					}
@@ -380,7 +401,7 @@ public class MiniMaxAlphaBeta {
 	public ArrayList<Move> getMoves(String color,Tile currentSpot)
 	{
 		ArrayList<Move> output = new ArrayList<Move>();
-		if(color == currentSpot.getPiece().color)
+		if(color.equals(currentSpot.getPiece().color))
 		{
 			if(currentSpot.getPiece() instanceof Pawn)
 			{
@@ -418,7 +439,7 @@ public class MiniMaxAlphaBeta {
 		ArrayList<Move> output = new ArrayList<Move>();
 		int newRo[]={0,0};
 		int newCo[]={0,0,0};
-		if(color == "white" && row != 8)
+		if(color.equals("white") && row != 8)
 		{
 			newRo[0] = row+1;
 			newRo[1] = row+2;
@@ -426,7 +447,7 @@ public class MiniMaxAlphaBeta {
 			newCo[1] = col+1;
 			
 		}
-		else if((color == "black") && row != 8)
+		else if((color.equals("black")) && row != 8)
 		{
 			newRo[0] = row-1;
 			newRo[1] = row-2;
@@ -454,7 +475,7 @@ public class MiniMaxAlphaBeta {
 		int row = currentSpot.getPiece().getRow();
 		int col = currentSpot.getPiece().getColumn();
 		ArrayList<Move> output = new ArrayList<Move>();
-		if(color == "white")
+		if(color.equals( "white"))
 		{
 			for(int i = 0;i<8;++i)
 			{

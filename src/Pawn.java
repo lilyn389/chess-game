@@ -11,7 +11,7 @@ public class Pawn extends Piece {
 	}
 	public Pawn(Tile[][] gridIn, String color, String name, int row, int column, int ID, boolean alive) {
 		super(gridIn, color, name, row, column, ID, alive);
-		if (color == "white") {
+		if (color.equals("white")) {
 			pawn = new ImageIcon("white_pawn.png");
 		}
 		else {
@@ -21,7 +21,7 @@ public class Pawn extends Piece {
 	public Pawn(Pawn in)
 	{
 		super(in);
-		if (color == "white") {
+		if (color.equals("white")) {
 			pawn = new ImageIcon("white_pawn.png");
 		}
 		else {
@@ -57,7 +57,7 @@ public class Pawn extends Piece {
 			
 				if (column_diff == 0 && row_diff == 2 && grid[x][y].isEmpty()) {
 				
-					if(color == "white")
+					if(color.equals("white"))
 					{
 					
 						if (!grid[this.getRow() + 1][y].isEmpty()) {
@@ -65,7 +65,7 @@ public class Pawn extends Piece {
 							return false;
 						}
 					}
-					else if(color == "black")
+					else if(color.equals("black"))
 					{
 					
 						if (!grid[this.getRow() - 1][y].isEmpty()) {
