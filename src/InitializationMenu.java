@@ -24,7 +24,7 @@ public class InitializationMenu implements ActionListener {
     boolean network_play;
     boolean AI_play;
     boolean AI_AI;
-
+boolean visible = true;
     
     InitializationMenu() {
     	
@@ -174,7 +174,14 @@ public class InitializationMenu implements ActionListener {
 		{
 			try
 			{
-				chess_gui = new board(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP);
+				if(AI_AI)
+				{
+					chess_gui_ai = new AIBoard(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP,false);
+				}
+				else
+				{
+					chess_gui = new board(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP,visible);
+				}
 			} catch (InterruptedException | IOException e1)
 			{
 				e1.printStackTrace();
