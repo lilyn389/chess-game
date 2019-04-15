@@ -3,14 +3,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class AIBoard extends board implements Runnable {
-	public AI ai;
+	//public AI ai;
+
 
 	// public MiniMaxAlphaBeta tree;
 	public AIBoard(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty,
 			String _IP, boolean _visible) throws InterruptedException, IOException {
 		super(_AI_AI, _AI_play, _network_play, _AIColor, _AI_difficulty, _IP, _visible);
 		ai = new AI(this, _AIColor, _AI_difficulty);
-
+		Thread t = new Thread(this,"AI_board");
+		t.start();
 		/*
 		 * private int processSelection(int x, int y) { if
 		 * (grid[x][y].isEmpty()) { return -1; } else if (network_play &&
@@ -37,6 +39,11 @@ public class AIBoard extends board implements Runnable {
 */
 	public void run() {
 		// compute primes larger than minPrime
+		try {
+			connectToServer(IP);
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
+		}
 		while (true) {
 			if (ai.team == "white") {
 				// builds the tree and calculates move
