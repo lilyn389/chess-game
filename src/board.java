@@ -35,6 +35,7 @@ public class board extends JFrame implements Runnable {
 	private Color maroon = new Color(128, 0, 0); // gig'em 
 	private Color white = Color.WHITE;
 	Tile[][] grid = new Tile[8][8];  // keep track of the board state
+	private boolean visible;
 	
 	// client-server declarations
 	private Thread thread;
@@ -77,7 +78,7 @@ public class board extends JFrame implements Runnable {
     
 	/* Default Constructor, this constructor sets up the board,
 	 * places all pieces, and connects to the server. */
-	public board(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty, String _IP) throws InterruptedException, IOException {    
+	public board(boolean _AI_AI, boolean _AI_play, boolean _network_play, String _AIColor, String _AI_difficulty, String _IP, boolean _visible) throws InterruptedException, IOException {    
 		
 		// initialize game configuration set by user in the menu
 		AI_AI = _AI_AI;  // true if in 'computer vs. computer' mode.
@@ -86,6 +87,9 @@ public class board extends JFrame implements Runnable {
 		network_play = _network_play; // currently always true, meaning that we will always connect to the network
 		AIColor = _AIColor; // determines color of AI
 		AI_difficulty = _AI_difficulty; // difficulty level set by user { easy | medium | hard }
+		
+		// set visibility 
+		visible = _visible;
 		
 		// IP address for network_play
 		IP = _IP;
@@ -360,7 +364,7 @@ public class board extends JFrame implements Runnable {
 		space.setSize(600, 600);
 		space.setResizable(true);
 		space.setLocationRelativeTo(null);  // centers window
-		space.setVisible(true);
+		space.setVisible(visible);
 		
 		// Connect to the server
 		if (network_play)
@@ -379,8 +383,6 @@ public class board extends JFrame implements Runnable {
 
 		// connect output stream and send message to server
 		pr = new PrintWriter(s.getOutputStream());
-		pr.println("player one here");
-		pr.flush();
 		
 		// connect input stream and wait for message from server
 		in = new InputStreamReader(s.getInputStream());
@@ -412,28 +414,13 @@ public class board extends JFrame implements Runnable {
 		if (my_color.equals("white")) 
 		{
 			// wait for player 2 to connect
-			JOptionPane.showMessageDialog(space, "You are white, waiting for player 2 to join");
-	
-			server_msg = bf.readLine();
-
-			if(server_msg.equals("ready")) 
-			{	
-				System.out.println("Player 2 connected");
-				JOptionPane.showMessageDialog(space, "Player 2 connected, you move first");
-			}	
+			JOptionPane.showMessageDialog(space, "You are white, move first");
 		}
-		
 		else 
 		{
-			server_msg = bf.readLine();
-
-			if(server_msg.equals("ready")) 
-			{	
-				System.out.println("Player 1 connected");
-				JOptionPane.showMessageDialog(space, "You are black, player 1 is connected, you move second");
-			}				
+			System.out.println("Player 1 connected");
+			JOptionPane.showMessageDialog(space, "You are black, player 1 is connected, you move second");			
 		}
-		
 		return true;
 	}
 	
@@ -519,11 +506,107 @@ public class board extends JFrame implements Runnable {
 		else return false;
 	}
 	
+	// This function checks the validity of the move for the purpose of the server
+	public boolean serverCheck(String move)
+	{
+		String from = "";
+		String to = "";
+		int from_row = 0;
+		int from_column = 0;
+		int to_row = 0;
+		int to_column = 0;
+		
+		if (move.length() != 5) 
+		{
+			System.out.println("Error: Incorrect move message sent from server");
+			return false;
+		}
+		else 
+		{
+			// parse
+			from = move.substring(0, 2);
+			to = move.substring(3, 5);
+		}
+		
+		// Convert rows
+		int row_digit_1 = from.charAt(1) - '0';
+		from_row = 8 - row_digit_1;
+		int row_digit_2 = to.charAt(1) - '0';
+		to_row = 8 - row_digit_2;
+		 
+		// Convert the columns
+		switch (from.charAt(0)) {
+		case 'A':
+			from_column = 0;
+			break;
+		case 'B':
+			from_column = 1;
+			break;
+		case 'C':
+			from_column = 2;
+			break;
+		case 'D':
+			from_column = 3;
+			break;
+		case 'E':
+			from_column = 4;
+			break;
+		case 'F':
+			from_column = 5;
+			break;
+		case 'G':
+			from_column = 6;
+			break;
+		case 'H':
+			from_column = 7;
+			break;
+		default:
+			System.out.println("Error: wrong move message from server");
+		}
+
+		switch (to.charAt(0)) {
+		case 'A':
+			to_column = 0;
+			break;
+		case 'B':
+			to_column = 1;
+			break;
+		case 'C':
+			to_column = 2;
+			break;
+		case 'D':
+			to_column = 3;
+			break;
+		case 'E':
+			to_column = 4;
+			break;
+		case 'F':
+			to_column = 5;
+			break;
+		case 'G':
+			to_column = 6;
+			break;
+		case 'H':
+			to_column = 7;
+			break;
+		default:
+			System.out.println("Error: wrong move message from server");
+		}		
+		
+		if (!grid[from_row][from_column].isEmpty())
+		{
+			selected = grid[from_row][from_column].getPiece();
+			processMove(to_row, to_column);
+			return true;
+		}
+		else return false;
+	}
+	
 	/* This is the move piece function, it first updates the grid, then checks if the desired move 
 	 * path is valid. Then, it checks the location of the move to be sure that it can move there.
 	 * After the move, it checks for pawn promotion conditions, check & checkmate conditions, and 
 	 * switches the turn. */
-	private void processMove(int x, int y) 
+	public void processMove(int x, int y) 
 	{
 		boolean moved = false;
 		
@@ -619,6 +702,7 @@ public class board extends JFrame implements Runnable {
 	
 	private void sendMove(int x, int y) 
 	{
+		String svr_msg = "";
 		String from, to, move_msg;
 		int from_row, to_row;
 		String from_column, to_column;
@@ -716,7 +800,37 @@ public class board extends JFrame implements Runnable {
 		{
 			e.printStackTrace();
 		}
-		System.out.println("Recieved move: " + move_msg);
+		System.out.println("Recieved: " + move_msg);
+		
+		if (move_msg.equals("OK"))
+		{
+			try
+			{
+				move_msg = bf.readLine();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("Recieved: " + move_msg);
+			if (move_msg.equals("WINNER"))
+			{
+				JOptionPane.showMessageDialog(space, "You win!!");
+			}
+		}
+		else if (move_msg.equals("TIME"))
+		{
+			JOptionPane.showMessageDialog(space, "Time violation, you lose");
+		}
+		
+		else if (move_msg.equals("WINNER"))
+		{
+			JOptionPane.showMessageDialog(space, "You Won!!");
+		}
+		
+		else if (move_msg.equals("ILLEGAL"))
+		{
+			JOptionPane.showMessageDialog(space, "Illegal move, you lose");
+		}	
 		
 		String from, to;
 		
