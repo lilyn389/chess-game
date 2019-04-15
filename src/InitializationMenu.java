@@ -18,23 +18,25 @@ public class InitializationMenu implements ActionListener {
     JRadioButton level_3;
     JRadioButton get_ip;
     board chess_gui;
+    AIBoard chess_gui_ai;
     String AIColor;
     String AI_difficulty;
     String IP;
     boolean network_play;
     boolean AI_play;
     boolean AI_AI;
-boolean visible = true;
+    boolean visible;
     
     InitializationMenu() {
     	
     	// initialize variables to false and null values
-    	AIColor = "";
-    	AI_difficulty = "";
-    	network_play = false;
+    	AIColor = "black";
+    	AI_difficulty = "medium";
+    	network_play = true;
     	AI_play = false;
-    	AI_AI = false;
+    	AI_AI = true;
     	IP = "localhost";
+    	visible = true;
     	
         cards = new JPanel(new CardLayout());
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,7 +120,7 @@ boolean visible = true;
 		if (e.getSource() == player_2) // player_2 = Play computer
 		{
 			AI_play = true;
-			network_play = true;
+			network_play = false;
 			IP = JOptionPane.showInputDialog("Enter IP Address");
 			cl.show(cards, "MyPanel0");
 		}
@@ -176,7 +178,7 @@ boolean visible = true;
 			{
 				if(AI_AI)
 				{
-					chess_gui_ai = new AIBoard(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP,false);
+					chess_gui_ai = new AIBoard(AI_AI, AI_play, network_play, AIColor, AI_difficulty, IP,visible);
 				}
 				else
 				{
@@ -186,9 +188,19 @@ boolean visible = true;
 			{
 				e1.printStackTrace();
 			}
-			chess_gui.getKings()[0].setGrid(chess_gui.getGrid());
-			chess_gui.getKings()[1].setGrid(chess_gui.getGrid());
-			f.dispose();
+			if(AI_AI)
+			{
+				//chess_gui_ai.getKings()[0].setGrid(chess_gui.getGrid());
+				//chess_gui_ai.getKings()[1].setGrid(chess_gui.getGrid());
+				f.dispose();
+			}
+			else
+			{
+				//chess_gui.getKings()[0].setGrid(chess_gui.getGrid());
+				//chess_gui.getKings()[1].setGrid(chess_gui.getGrid());
+				f.dispose();
+			}
+			
 		}
 	}
 
