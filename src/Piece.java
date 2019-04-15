@@ -125,7 +125,11 @@ public abstract class Piece {
 	public abstract void setIcon(ImageIcon icon);
 
 	public abstract boolean isValidMove(int x, int y);
-
+	
+	public abstract boolean isCheck();
+	
+	public abstract boolean isCheckMate();
+	
 	protected boolean diagonalMove(int x, int y)
 	{
 

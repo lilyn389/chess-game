@@ -61,4 +61,14 @@ public class Bishop extends Piece implements Cloneable{
 	{
 		return 10;
 	}
+	@Override
+	public boolean isCheck() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean isCheckMate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

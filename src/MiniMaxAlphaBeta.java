@@ -326,8 +326,17 @@ public class MiniMaxAlphaBeta {
 	private float calculatePieces(String color,Tile[][] grid)
 	{
 		//Calculates pieces(color) - pieces(other team)
-		float colorsPieces =0;
+		float colorsPieces = 0;
 		float otherColorsPieces = 0;
+		int colorQueens = 0;
+		int otherColorQueens = 0;
+		int colorBishops = 0;
+		int otherColorBishops = 0;
+		int colorRooks = 0;
+		int otherColorRooks = 0;
+		Piece colorKing = grid[0][0].getPiece();
+		Piece otherColorKing = grid[0][0].getPiece();
+		
 		for(int i = 0;i<8;++i)
 		{
 			for(int j = 0;j<8;++j)
@@ -335,22 +344,125 @@ public class MiniMaxAlphaBeta {
 				Piece p = grid[i][j].getPiece();
 				if(grid[i][j].isEmpty())
 				{
-					
+					continue;
 				}
 				else
 				{
 					
 					if(p.color == color)
 					{
+						//Summing value for all pieces alive
 						colorsPieces = colorsPieces + p.getValue();
+						
+						//Rewarding control of center tiles according to strength of piece
+						if(i >= 3 && i < 5 && j >= 3 && j < 5) 
+						{
+							colorsPieces += p.getValue();
+						}
+						
+						//Tracking potential strong piece combos
+						if (p.getName().equals("bishop")) 
+						{
+							colorBishops++;
+						}
+						else if (p.getName().equals("rooks")) 
+						{							 
+							colorRooks++;
+						}
+						else if (p.getName().equals("queen")) 
+						{
+							colorQueens++;
+						}
+						else if (p.getName().equals("pawn") && i >= 5) 
+						{
+							colorsPieces += p.getValue();
+						}
+						else if (p.getName().equals("king")) {
+							
+							colorKing = p;
+						}
+
 					}
 					else
 					{
 						otherColorsPieces = otherColorsPieces + p.getValue();
+						
+						if(i >= 3 && i < 5 && j >= 3 && j < 5) 
+						{
+							otherColorsPieces += p.getValue();
+						}
+						
+						if (p.getName().equals("bishop")) 
+						{
+							otherColorBishops++;
+						}
+						else if (p.getName().equals("rooks")) 
+						{
+							 otherColorRooks++;
+						}
+						else if (p.getName().equals("queen"))
+						{
+							otherColorQueens++;
+						}
+						else if (p.getName().equals("pawn") && i >= 5)
+						{
+							otherColorsPieces += p.getValue();
+						}
+						else if (p.getName().equals("king")) {
+							
+							otherColorKing = p;
+						}
 					}
 				}
 			}
 		}
+		
+		//Rewarding beneficial combos
+		if (colorBishops == 2) {
+			
+			colorsPieces += 30 * 2;
+		}
+		
+		if (colorRooks == 2) {
+			
+			colorsPieces += 30 * 2;
+		}
+		
+		colorsPieces += 90 * colorQueens;
+		
+		if (otherColorBishops == 2) {
+			
+			otherColorsPieces += 30 * 2;
+		}
+		
+		if (otherColorRooks == 2) {
+			
+			otherColorsPieces += 30 * 2;
+		}
+		
+		otherColorsPieces += 90 * otherColorQueens;
+		
+		
+		//Rewarding check/mate
+		if (otherColorKing.isCheck()) 
+		{
+			colorsPieces += 100;
+		}
+		
+		if (colorKing.isCheck()) 
+		{
+			otherColorsPieces += 100;
+		}
+		
+		if (otherColorKing.isCheckMate()) 
+		{
+			colorsPieces += 10000;
+		}
+		else if (colorKing.isCheckMate()) 
+		{
+			otherColorsPieces += 10000;
+		}
+		
 		return colorsPieces - otherColorsPieces;
 	}
 	/*public ArrayList<Move> getAllMovesAfterAI(String color,Tile[][] grid)

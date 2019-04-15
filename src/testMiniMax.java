@@ -14,15 +14,11 @@ public class testMiniMax{
 	{
 	try
 	{
-		Tile c = new Tile(new Pawn(),false);
-		Tile d = (Tile)c.clone();
-		Tile e = c;
-		c.setEmpty(true);
-		c.setPiece(new Pawn());
-		c.getPiece().setColumn(2000);
+		
 		board chess_gui = new board(false, true, false, "white", "easy","localhost");
 		MiniMaxAlphaBeta a = new MiniMaxAlphaBeta(chess_gui,"white",chess_gui.getAI().maxDepth);
 		Move b = a.MM();
+		
 		Move f = a.MM();
 	} catch (InterruptedException | IOException e1)
 	{

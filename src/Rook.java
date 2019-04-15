@@ -66,4 +66,14 @@ public class Rook extends Piece implements Cloneable{
 	{
 		return 50;
 	}
+	@Override
+	public boolean isCheck() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean isCheckMate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

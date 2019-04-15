@@ -164,4 +164,14 @@ public class Pawn extends Piece {
 	{
 		return 10;
 	}
+	@Override
+	public boolean isCheck() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean isCheckMate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

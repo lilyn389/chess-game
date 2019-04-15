@@ -1,5 +1,5 @@
 import javax.swing.JButton;
-
+import java.util.Random;
 //import java.awt.Color;
 
 //import javax.swing.JButton;
@@ -15,6 +15,7 @@ public class AI {
 	private Tile[][] grid = new Tile[8][8];
 	private static final long serialVersionUID = -5478665655191131191L;
 	String turn;
+	boolean firstMove = true;
 	Piece selected;
 	//boolean select;
 	public String team;
@@ -228,6 +229,13 @@ public class AI {
 	    //generate all the moves for a given position
 	   // object newGameMoves = game.ugly_moves();
 	    //return newGameMoves[Math.floor(Math.random() * newGameMoves.length)];
+		
+		if (firstMove) {
+			
+			firstMove = false;
+			//return opener();
+		}
+		
 		MinMax = new MiniMaxAlphaBeta(b,team,maxDepth);
 		Move m = MinMax.MM();
 		if((m.getX1() == m.getX2()) && (m.getY1() == m.getY2()))
@@ -517,6 +525,78 @@ public class AI {
 	public void updateBoard2(board bin)
 	{
 		b = bin;
+	}
+	
+	//Randomly determine the opening move based off of common opening moves
+	private Move opener() {
+		
+		if (team.equals("white")) {
+			
+			return whiteOpener();
+		}
+		else {
+			
+			return blackOpener();
+		}
+	}
+	
+	private Move whiteOpener() {
+		
+		Move opnr;
+		Random rand = new Random();
+		int choice = rand.nextInt(4);
+		
+		if (choice == 0) {
+			
+			//1e4
+			opnr = new Move(1, 3, 3, 3);
+		}
+		else if (choice == 1) {
+			
+			//1d4
+			opnr = new Move(1, 4, 3, 4);
+		}
+		else if (choice == 2) {
+			
+			//1c4
+			opnr = new Move(1, 5, 3, 5);
+		}
+		else {
+			//Nf3
+			opnr = new Move(0, 1, 2, 2);
+		}
+		
+		return opnr;
+	}
+	
+	private Move blackOpener() {
+		
+		Move opnr;
+		Random rand = new Random();
+		int choice = rand.nextInt(4);
+		
+		if (choice == 0) {
+			
+			//1c5
+			opnr = new Move(6, 5, 4, 5);
+		}
+		else if (choice == 1) {
+			
+			//1e6
+			opnr = new Move(6, 3, 5, 3);
+		}
+		else if (choice == 2) {
+			
+			//1e5
+			opnr = new Move(6, 3, 4, 3);
+		}
+		else {
+			
+			//1c6
+			opnr = new Move(6, 5, 5, 5);
+		}
+		
+		return opnr;
 	}
 }
 /*if(matrixBoard[x][y] == Knight[0] || matrixBoard[x][y] == Knight[1] 
