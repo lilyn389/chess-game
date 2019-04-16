@@ -92,19 +92,7 @@ public class MiniMaxAlphaBeta {
 			{
 				for(int k = 0;k<8;++k)
 				{
-					/*if(in.piece instanceof Pawn)
-						gridCnew[j][k] = new Tile(new Pawn((Pawn)in.piece);
-					if(in.piece instanceof Bishop)
-							this.piece = new Bishop((Bishop)in.piece);
-					if(in.piece instanceof King)
-							this.piece = new King((King)in.piece);
-					if(in.piece instanceof Knight)
-							this.piece = new Knight((Knight)in.piece);
-					if(in.piece instanceof Queen)
-							this.piece = new Queen((Queen)in.piece);
-					if(in.piece instanceof Rook)
-							this.piece = new Rook((Rook)in.piece);
-						this.empty = in.empty;*/
+					
 					gridCnew[j][k] = new Tile(b.grid[j][k]);
 				}
 			}
@@ -112,10 +100,17 @@ public class MiniMaxAlphaBeta {
 			int row = potentialMoves.get(i).getX1();
 			int col = potentialMoves.get(i).getY1();
 			gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setEmpty(false);
-			gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridC[row][col].getPiece());
+			gridCnew[potentialMoves.get(i).getX2()][potentialMoves.get(i).getY2()].setPiece(gridCnew[row][col].getPiece());
 			gridCnew[row][col].setEmpty(true);
 			gridCnew[row][col].setPiece(null);
+			if(maxDepth > 1)
+			{
 			teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,b.getAI().getOpponent()));
+			}
+			else
+			{
+				teamScores.add(calculatePieces(b.getAI().team,gridCnew));
+			}
 			if(alpha <= teamScores.get(i))
 			{
 				alpha = teamScores.get(i);
@@ -235,11 +230,8 @@ public class MiniMaxAlphaBeta {
 		{ // Calculate from given recursive values
 			for(int i = 0; i<potentialMoves.size();++i)
 			{
-				float bestVal = Float.NEGATIVE_INFINITY;
-				if(beta <= alpha)
-				{
-					break;
-				}
+				
+				
 				//Tile[][] gridCnew = currentState.clone();
 				Tile[][] gridCnew = new Tile[8][8];
 				for(int j = 0;j<8;++j)
@@ -266,19 +258,23 @@ public class MiniMaxAlphaBeta {
 					teamScores.add(MM2(potentialMoves.get(i),gridCnew,maxDepth,depth,alpha,beta,"white"));
 				}
 				 //MM2(Move init,Tile[][] currentState,int maxDepth,int depth,float alpha,float beta,String colorIn)
-				if((depth%2) == 1)
+				if((depth%2) == 0)
 				{
 					if(teamScores.get(i) <= beta)
 					{
 						beta = teamScores.get(i);
 					}
 				}
-				if((depth%2) == 0)
+				if((depth%2) == 1)
 				{
 					if(teamScores.get(i) >= alpha)
 					{
 						alpha = teamScores.get(i);
 					}
+				}
+				if(beta <= alpha)
+				{
+					break;
 				}
 			}
 			if((depth%2) == 1)
