@@ -209,19 +209,19 @@ public class AI {
 	{
 		if(diff == "easy")
 		{
-			return 4;
+			return 1;
 		}
 		else if(diff == "medium")
 		{
-			return 4;
+			return 1;
 		}
 		else if(diff == "hard")
 		{
-			return 12;
+			return 1;
 		}
 		else
 		{
-			return 4;
+			return 1;
 		}
 	}
 
