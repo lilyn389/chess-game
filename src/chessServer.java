@@ -22,10 +22,19 @@ public class chessServer {
 	private String p2_str;
 	private boolean p1_ready;
 	private boolean p2_ready;
+	private board master;
+	private boolean game_on;
+	private Thread thread;
+    private boolean stop;
+    private int player;
+    private PrintWriter pr;
+    private boolean time_up;
 	
 	
-	public chessServer() throws IOException
+	public chessServer() throws IOException, InterruptedException
 	{
+		master = new board(false, false, false, "", "", "", false);
+		
 		p1_ready = false;
 		p1_ready = false;
 		
@@ -41,9 +50,6 @@ public class chessServer {
 		// connect input stream from player one
 		p1_in = new InputStreamReader(p1_s.getInputStream());
 		p1_bf = new BufferedReader(p1_in);
-
-		p1_str = p1_bf.readLine();
-		System.out.println("client : " + p1_str);
 
 		p1_pr = new PrintWriter(p1_s.getOutputStream());
 		// send info message
@@ -76,9 +82,6 @@ public class chessServer {
 		p2_in = new InputStreamReader(p2_s.getInputStream());
 		p2_bf = new BufferedReader(p2_in);
 
-		p2_str = p2_bf.readLine();
-		System.out.println("client : " + p2_str);
-
 		p2_pr = new PrintWriter(p2_s.getOutputStream());
 		p2_pr.println("WELCOME");
 		p2_pr.flush();
@@ -98,28 +101,95 @@ public class chessServer {
 			System.out.println("Player 2 not ready");
 			p2_ready = false;
 		}		
-		
-		// send READY signal to player 2
-		p2_pr.println("ready");
-		p2_pr.flush();
 
-		// send message to player 1, that player 2 has connected
-		p1_pr.println("ready");
-		p1_pr.flush();
-
-		while (true) {
+		game_on = true;
+		while (game_on) {
 			
+			// start timer for p1 move
+			int seconds = 0;
+		    long startTime = System.currentTimeMillis();
+            
 			// wait for player 1 move
 			p1_str = p1_bf.readLine();
 			System.out.println("Player 1 moved: " + p1_str);
+			
+		    long endTime = System.currentTimeMillis();
+		    
+		    if ( (endTime - startTime) > (seconds * 1000) && seconds != 0)
+		    {
+		    	// time violation
+				p1_pr.println("TIME");
+				p1_pr.flush();
+				p1_pr.println("LOSER");
+				p1_pr.flush();
+				
+				// send WIN message to player 2
+				p2_pr.println("WINNER");
+				p2_pr.flush();				
+		    }
+		    else
+		    {
+				// send OK message'
+				p1_pr.println("OK");
+				p1_pr.flush();
+		    }
+			
+			// stop timer
+			stop = true;
+			
+			// validate 
+			if (!master.serverCheck(p1_str))
+			{
+				p1_pr.println("ILLEGAL");
+				p1_pr.println("LOSER");
+				game_on = false;
+				break;
+			}
 
 			// send move to player 2
 			p2_pr.println(p1_str);
 			p2_pr.flush();
 
+			// start timer for p2 move
+			seconds = 0;
+			startTime = System.currentTimeMillis();
+			
 			// wait for player 2 to move
 			p2_str = p2_bf.readLine();
 			System.out.println("Player 2 moved: " + p2_str);
+			
+		    endTime = System.currentTimeMillis();
+		    
+		    if ( (endTime - startTime) > (seconds * 1000) && seconds != 0)
+		    {
+		    	// time violation
+				p2_pr.println("TIME");
+				p2_pr.flush();
+				p2_pr.println("LOSER");
+				p2_pr.flush();
+				
+				// send WIN message to player 2
+				p1_pr.println("WINNER");
+				p1_pr.flush();				
+		    }
+		    else
+		    {
+				// send OK message'
+				p2_pr.println("OK");
+				p2_pr.flush();
+		    }
+			
+			// stop timer
+			stop = true; 
+			
+			// validate 
+			if (!master.serverCheck(p2_str))
+			{
+				p2_pr.println("ILLEGAL");
+				p2_pr.println("LOSER");
+				game_on = false;
+				break;
+			}
 
 			// send move to player 1
 			p1_pr.println(p2_str);
@@ -128,4 +198,5 @@ public class chessServer {
 		// ss.close()
 	}
 }
+
 
