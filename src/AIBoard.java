@@ -123,5 +123,7 @@ public class AIBoard extends board implements Runnable {
 		p.setColumn(out.getY2());
 		grid[out.getX2()][out.getY2()].setPiece(selected);
 		grid[out.getX2()][out.getY2()].setEmpty(false);
+		if (turn.equals("white")) turn = "black";
+		else turn = "white";
 	}
 }
