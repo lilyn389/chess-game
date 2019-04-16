@@ -11,6 +11,7 @@ public class AIBoard extends board implements Runnable {
 			String _IP, boolean _visible) throws InterruptedException, IOException {
 		super(_AI_AI, _AI_play, _network_play, _AIColor, _AI_difficulty, _IP, _visible);
 		ai = new AI(this, _AIColor, _AI_difficulty);
+		
 		Thread t = new Thread(this,"AI_board");
 		t.start();
 		/*
@@ -45,15 +46,18 @@ public class AIBoard extends board implements Runnable {
 			e.printStackTrace();
 		}
 		while (true) {
-			if (ai.team == "white") {
+			if (ai.team.equals("white")) {
 				// builds the tree and calculates move
 				Move out = ai.calculateBestMove();
 				// replaces it in the board
 				Piece p = grid[out.getX1()][out.getY1()].getPiece();
+				selected = p;
 				tiles[out.getX1()][out.getY1()].setIcon(null);
-				tiles[out.getX1()][out.getY1()].setIcon(p.getIcon());
+				tiles[out.getX2()][out.getY2()].setIcon(p.getIcon());
 				grid[p.getRow()][p.getColumn()].setPiece(null);
 				grid[p.getRow()][p.getColumn()].setEmpty(true);
+				row_moved_from = selected.getRow();
+				column_moved_from = selected.getColumn();
 				p.setRow(out.getX2());
 				p.setColumn(out.getY2());
 				grid[out.getX2()][out.getY2()].setPiece(selected);
@@ -63,16 +67,20 @@ public class AIBoard extends board implements Runnable {
 				sendMove(out.getX2(), out.getY2());
 				// receives and updates move
 				getMove();
-			} else if (ai.team == "black") {
+			} else if (ai.team.equals("black")) {
+				//recieves and updates move
 				getMove();
 				// builds the tree and calculates move
 				Move out = ai.calculateBestMove();
 				// replaces it in the board
 				Piece p = grid[out.getX1()][out.getY1()].getPiece();
+				selected = p;
 				tiles[out.getX1()][out.getY1()].setIcon(null);
-				tiles[out.getX1()][out.getY1()].setIcon(p.getIcon());
+				tiles[out.getX2()][out.getY2()].setIcon(p.getIcon());
 				grid[p.getRow()][p.getColumn()].setPiece(null);
 				grid[p.getRow()][p.getColumn()].setEmpty(true);
+				row_moved_from = selected.getRow();
+				column_moved_from = selected.getColumn();
 				p.setRow(out.getX2());
 				p.setColumn(out.getY2());
 				grid[out.getX2()][out.getY2()].setPiece(selected);
@@ -81,7 +89,6 @@ public class AIBoard extends board implements Runnable {
 				// sends it
 				sendMove(out.getX2(), out.getY2());
 				// receives and updates move
-
 			}
 		}
 	}
