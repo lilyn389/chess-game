@@ -30,7 +30,7 @@ public class InitializationMenu implements ActionListener {
     InitializationMenu() {
     	
     	// initialize variables to false and null values
-    	AIColor = "black";
+    	AIColor = "white";
     	AI_difficulty = "medium";
     	network_play = true;
     	AI_play = false;
@@ -126,6 +126,8 @@ public class InitializationMenu implements ActionListener {
 		}
 		if (e.getSource() == player_3) // player_3 = Play human
 		{
+			AI_play = false;
+			AI_AI = false;
 			network_play = true;
 			IP = JOptionPane.showInputDialog("Enter IP Address");
 			cl.show(cards, "MyPanel2");
