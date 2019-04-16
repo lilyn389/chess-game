@@ -26,7 +26,34 @@ public abstract class Piece {
 		is_alive = alive;
 		grid = gridIn;
 	}
-	
+	public Piece(Piece in)
+	{
+		//Tile[][] in2 = deepCopy(in.grid);
+		this.grid = in.grid;
+		this.color = in.color;
+		this.name = in.name;
+		this.row = in.row;
+		this.column = in.column;
+		this.ID = in.ID;
+		this.is_alive = in.is_alive;
+	}
+	public Tile[][] deepCopy(Tile[][] in)
+	{
+		if(in.length >0)
+		{
+			Tile[][] out = new Tile[in.length][in[0].length]; 
+			for(int i =0;i<in.length;++i)
+			{
+				for(int j =0;j<in[0].length;++j)
+				{
+					out[i][j] = new Tile(in[i][j]);
+				}
+			}
+			return out;
+		}
+		Tile[][] out = {{}};
+		return out;
+	}
 	public int getRow() {
 		return row;
 	}
@@ -107,9 +134,6 @@ public abstract class Piece {
 
 		if (row_diff == 0)
 		{
-			System.out.println(row);
-			System.out.println(column);
-			System.out.println("error1");
 			return false;
 		}
 
@@ -203,8 +227,6 @@ public abstract class Piece {
 		}
 		else
 		{
-
-			System.out.println("error2");
 			return false;
 		}
 	}
@@ -295,4 +317,5 @@ public abstract class Piece {
 			return false;
 		}
 	}
+	public abstract int getValue();
 }
