@@ -207,15 +207,15 @@ public class AI {
 	}
 	int determineDifficulty(String diff)
 	{
-		if(diff.equals("easy"))
+		if(diff == "easy")
 		{
 			return 4;
 		}
-		else if(diff.equals("medium"))
+		else if(diff == "medium")
 		{
-			return 8;
+			return 4;
 		}
-		else if(diff.equals("hard"))
+		else if(diff == "hard")
 		{
 			return 12;
 		}
@@ -231,7 +231,7 @@ public class AI {
 		// return newGameMoves[Math.floor(Math.random() * newGameMoves.length)];
 		MinMax = new MiniMaxAlphaBeta(b, team, maxDepth);
 		Move m = MinMax.MM();
-		if (m.getX1() >= 0 && m.getX1() <= 7 && m.getY1() >= 0 && m.getY1() <= 0) {
+		if (m.getX1() >= 0 && m.getX1() <= 7 && m.getY1() >= 0 && m.getY1() <= 7 && m.getX2() >= 0 && m.getX2() <= 7 && m.getY2() >= 0 && m.getY2() <= 7) {
 			if (b.grid[m.getX1()][m.getY1()].isEmpty()) {
 				return calculateRandomMove(calculateRandomPiece());
 			} else if (!b.grid[m.getX1()][m.getY1()].getPiece().isValidMove(m.getX2(), m.getY2())) {
@@ -256,7 +256,7 @@ public class AI {
 		
 		 int max;// = 5; 
 	        int min = 1;
-	        if(team .equals("white"))
+	        if(team.equals("white"))
 	        {
 	        	max = b.white_pieces.size();
 	        }
