@@ -213,11 +213,11 @@ public class AI {
 		}
 		else if(diff == "medium")
 		{
-			return 1;
+			return 4;
 		}
 		else if(diff == "hard")
 		{
-			return 1;
+			return 5;
 		}
 		else
 		{
