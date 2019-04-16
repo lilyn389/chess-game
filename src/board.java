@@ -22,7 +22,7 @@ public class board extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	// AI declarations 
-	public AI ai;
+	protected AI ai;
 	private boolean isAI = false; // ***FIXME**** temp var to give AI moves
 	private String AIColor;
 	private String AI_difficulty;
@@ -55,8 +55,8 @@ public class board extends JFrame implements Runnable {
 	Vector<Piece> white_pieces;  // vector to keep track of white pieces
 	Vector<Piece> black_pieces;  // vector to keep track of black pieces
 	private int numOfQueens = 2;
-	private int row_moved_from;
-	private int column_moved_from;
+	protected int row_moved_from;
+	protected int column_moved_from;
 	
 	// declare knights
 	private Knight[] knights = new Knight[4];
@@ -404,6 +404,17 @@ public class board extends JFrame implements Runnable {
 			// send ready message to server
 			pr.println("READY");
 			pr.flush();
+			
+			// let user know how much time they have
+			if (time.equals("0"))
+			{
+				JOptionPane.showMessageDialog(space, "No time limit for moves");				
+			}
+			else 
+			{
+				int move_time = Integer.parseInt(time) / 1000;
+				JOptionPane.showMessageDialog(space, move_time + " seconds per move");
+			}
 		}
 		else 
 		{
@@ -700,7 +711,7 @@ public class board extends JFrame implements Runnable {
 		JOptionPane.showMessageDialog(space, winner + "is the winner!");
 	}
 	
-	protected void sendMove(int x, int y) 
+	public void sendMove(int x, int y) 
 	{
 		String svr_msg = "";
 		String from, to, move_msg;
