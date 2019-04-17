@@ -125,8 +125,7 @@ public class King extends Piece implements Cloneable{
             
             int row_diff = Math.abs(x - this.getRow());
             int column_diff = Math.abs(y - this.getColumn());
-            
-            //FUTURE FIX: invalidates moves into check
+         
             
             if (row_diff <= 1 && row_diff >= 0 && column_diff <= 1 && column_diff >= 0) {
                 
@@ -144,6 +143,29 @@ public class King extends Piece implements Cloneable{
     private boolean validCastle(int x, int y) {
         
         return false;
+    }
+    
+    public boolean isCheck(int x, int y) 
+    {
+    	boolean exist;
+        boolean check = false;
+        // loop through vector of enemy pieces and see if any of them can kill the king
+        for (int i = 0; i < enemy_pieces.size(); i++) {
+            if (enemy_pieces.get(i).isValidMove(x, y)) {
+                exist = false;
+                check = true;
+                for (int j = 0; j < assassin.size(); j++) {
+                    if (assassin.get(j).getID() == enemy_pieces.get(i).getID()) {
+                        exist = true;
+                        //return true;  // don't add to list since it is already there
+                    }
+                }
+                if (!exist)
+                    assassin.addElement(enemy_pieces.get(i)); // add the assassin to the list
+                //return true;
+            }
+        }
+        return check;
     }
     
     public boolean isCheck() {
