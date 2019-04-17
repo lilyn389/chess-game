@@ -618,41 +618,53 @@ public class board extends JFrame implements Runnable {
 	public void processMove(int x, int y) 
 	{
 		boolean moved = false;
+		boolean king_safe = true;
 		
       	selected.updateGrid(grid);
 		if (selected.isValidMove(x, y) && checkMoveLocation(x, y) && selected.getColor().equals(turn))
 		{
-			// move piece
-			row_moved_from = selected.getRow();
-			column_moved_from = selected.getColumn();
-			tiles[selected.getRow()][selected.getColumn()].setIcon(null);
-			tiles[x][y].setIcon(selected.getIcon());
-			grid[selected.getRow()][selected.getColumn()].setPiece(null);
-			grid[selected.getRow()][selected.getColumn()].setEmpty(true);
-			selected.setRow(x);
-			selected.setColumn(y);
-			grid[x][y].setPiece(selected);
-			grid[x][y].setEmpty(false);
-			moved = true;
-			// Pawn promotion
-			if (selected.getName().equals("pawn") && (x == 0 || x == 7))
+			if (selected.getName().equals("king"))
 			{
-				queens[numOfQueens] = new Queen(grid, selected.getColor(), "queen", x, y, numOfQueens, true);
-				tiles[x][y].setIcon(null);
-				tiles[x][y].setIcon(queens[numOfQueens].getIcon());
-				grid[x][y].getPiece().setIsAlive(false);
-				grid[x][y].setPiece(queens[numOfQueens]);
-				
-				numOfQueens++;
-				
-				// add to vector of pieces
-				if (selected.getColor().equals("white"))
-				{
-					white_pieces.addElement(queens[numOfQueens - 1]);
+				King k = (King) selected;
+				if (k.isCheck(x, y))
+				{  
+					king_safe = false;
 				}
-				else 
+			}
+			if (king_safe)
+			{
+				// move piece
+				row_moved_from = selected.getRow();
+				column_moved_from = selected.getColumn();
+				tiles[selected.getRow()][selected.getColumn()].setIcon(null);
+				tiles[x][y].setIcon(selected.getIcon());
+				grid[selected.getRow()][selected.getColumn()].setPiece(null);
+				grid[selected.getRow()][selected.getColumn()].setEmpty(true);
+				selected.setRow(x);
+				selected.setColumn(y);
+				grid[x][y].setPiece(selected);
+				grid[x][y].setEmpty(false);
+				moved = true;
+				// Pawn promotion
+				if (selected.getName().equals("pawn") && (x == 0 || x == 7))
 				{
-					black_pieces.addElement(queens[numOfQueens - 1]);
+					queens[numOfQueens] = new Queen(grid, selected.getColor(), "queen", x, y, numOfQueens, true);
+					tiles[x][y].setIcon(null);
+					tiles[x][y].setIcon(queens[numOfQueens].getIcon());
+					grid[x][y].getPiece().setIsAlive(false);
+					grid[x][y].setPiece(queens[numOfQueens]);
+					
+					numOfQueens++;
+					
+					// add to vector of pieces
+					if (selected.getColor().equals("white"))
+					{
+						white_pieces.addElement(queens[numOfQueens - 1]);
+					}
+					else 
+					{
+						black_pieces.addElement(queens[numOfQueens - 1]);
+					}
 				}
 			}
 		} 
