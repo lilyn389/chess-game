@@ -4,29 +4,31 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-public class InitializationMenu implements ActionListener {
-    JFrame f = new JFrame("Chess");
-    JPanel cards;
-    JButton begin;
-    JRadioButton color_1;
-    JRadioButton color_2;
-    JRadioButton player_1;
-    JRadioButton player_2;
-    JRadioButton player_3;
-    JRadioButton player_4;
-    JRadioButton level_1;
-    JRadioButton level_2;
-    JRadioButton level_3;
-    JRadioButton get_ip;
-    board chess_gui;
-    AIBoard chess_gui_ai;
-    String AIColor;
-    String AI_difficulty;
-    String IP;
-    boolean network_play;
-    boolean AI_play;
-    boolean AI_AI;
-    boolean visible;
+public class InitializationMenu implements ActionListener, Runnable {
+    private JFrame f = new JFrame("Chess");
+    private JPanel cards;
+    private JButton begin;
+    private JRadioButton color_1;
+    private JRadioButton color_2;
+    private JRadioButton player_1;
+    private JRadioButton player_2;
+    private JRadioButton player_3;
+    private JRadioButton player_4;
+    private JRadioButton level_1;
+    private JRadioButton level_2;
+    private JRadioButton level_3;
+    private JRadioButton get_ip;
+    private board chess_gui;
+    private AIBoard chess_gui_ai;
+    private String AIColor;
+    private String AI_difficulty;
+    private String IP;
+    private boolean network_play;
+    private boolean AI_play;
+    private boolean AI_AI;
+    private boolean visible;
+    private Thread server_thread;
+    private ChessServer server;
     
     InitializationMenu() {
     	
@@ -120,7 +122,16 @@ public class InitializationMenu implements ActionListener {
 			AI_AI = true;
 			network_play = true;
 			AI_play = false;
-			IP = JOptionPane.showInputDialog("Enter IP Address");
+			int reply = JOptionPane.showConfirmDialog(null, "Would you like to host the server?", "Server", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION)
+			{
+				server_thread = new Thread(this, "server");
+				server_thread.start();
+			}
+			else 
+			{
+				IP = JOptionPane.showInputDialog("Enter IP Address");
+			}
 			cl.show(cards, "MyPanel2");
 		}
 		if (e.getSource() == player_2) // player_2 = Play computer
@@ -136,7 +147,16 @@ public class InitializationMenu implements ActionListener {
 			AI_play = false;
 			AI_AI = false;
 			network_play = true;
-			IP = JOptionPane.showInputDialog("Enter IP Address");
+			int reply = JOptionPane.showConfirmDialog(null, "Would you like to host the server?", "Server", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION)
+			{
+				server_thread = new Thread(this, "server");
+				server_thread.start();
+			}
+			else 
+			{
+				IP = JOptionPane.showInputDialog("Enter IP Address");
+			}
 			cl.show(cards, "MyPanel2");
 		}
 		if (e.getSource() == player_4) // player_3 = Play local game
@@ -221,6 +241,18 @@ public class InitializationMenu implements ActionListener {
 				f.dispose();
 			}
 			
+		}
+	}
+
+	@Override
+	public void run()
+	{
+		try
+		{
+			server = new ChessServer();
+		} catch (IOException | InterruptedException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
